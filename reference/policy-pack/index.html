@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Live demo script (10–12 minutes) · ocm-mcp-server</title>
-<meta name="description" content="Preparation: make bootstrap done, server registered in the MCP client, Jaeger at http://localhost:16686, two terminals visible (agent + trusted approval terminal), Grafana/kubectl…">
-<meta property="og:title" content="Live demo script (10–12 minutes) · ocm-mcp-server">
-<meta property="og:description" content="Preparation: make bootstrap done, server registered in the MCP client, Jaeger at http://localhost:16686, two terminals visible (agent + trusted approval terminal), Grafana/kubectl…">
+<title>Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server</title>
+<meta name="description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
+<meta property="og:title" content="Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server">
+<meta property="og:description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ocm-mcp-server">
-<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/demo-script/">
+<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/policy-pack/">
 <!-- PNG, not the SVG banner: LinkedIn, X, Slack and Facebook all reject SVG
      for og:image and render no preview at all. Exported at 2400x1260 -
      the 1.91:1 ratio they crop cleanly, at 2x so it stays sharp on HiDPI
@@ -20,10 +20,10 @@
 <meta property="og:image:height" content="1260">
 <meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Live demo script (10–12 minutes) · ocm-mcp-server">
-<meta name="twitter:description" content="Preparation: make bootstrap done, server registered in the MCP client, Jaeger at http://localhost:16686, two terminals visible (agent + trusted approval terminal), Grafana/kubectl…">
+<meta name="twitter:title" content="Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server">
+<meta name="twitter:description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
-<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/demo-script/">
+<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/policy-pack/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
 <link rel="stylesheet" href="/static/site.css?v=8d649fcd52">
 <script>
@@ -108,61 +108,111 @@
   </button>
 
   <aside class="side" id="sidenav">
-    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/policy-pack/">Policy pack</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/" aria-current="page">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
+    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/policy-pack/" aria-current="page">Policy pack</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
   </aside>
 
   <article class="prose">
-    <h1>Live demo script (10–12 minutes)</h1>
+    <h1>Policy pack: reusable Kyverno guardrails for ManifestWork</h1>
 
-<p>Preparation: <code>make bootstrap</code> done, server registered in the MCP client,
-Jaeger at http://localhost:16686, two terminals visible (agent + trusted
-approval terminal), Grafana/kubectl watch optional.</p>
-<h2 id="act-1---the-incident-4-min">Act 1 - the incident (4 min) <a class="header-anchor" href="#act-1---the-incident-4-min">#</a></h2>
-<pre><code class="language-bash">make inject SCENARIO=failing-rollout CLUSTER=cluster2
+<p>The nine <code>ClusterPolicy</code> objects in
+<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies"><code>deploy/policies/</code></a>
+are layer 2 of this project's four-layer model. They are also a standalone pack: if you
+run Open Cluster Management and let anything automated propose <code>ManifestWork</code> objects —
+an agent, a controller, a CI job — they apply to you whether or not you run this server.</p>
+<pre><code class="language-bash">kubectl apply -f deploy/policies/     # install
+kyverno test deploy/policies/tests    # 42 offline cases, no cluster needed
 </code></pre>
-<p>Prompt the agent:</p>
-<blockquote>
-<p>Payments is degraded somewhere in the fleet. Investigate and fix.</p>
-</blockquote>
-<p>Narrate the tool calls as they stream: fleet-wide look, narrowing to cluster2,
-events, logs, the diagnosis. Pause on the proposal: show <code>ocm-mcp show &lt;id&gt;</code>
-in the trusted terminal - <em>&quot;this is what a ten-second human review looks like.&quot;</em></p>
-<pre><code class="language-bash">ocm-mcp approve &lt;id&gt;        # paste token to the agent
-</code></pre>
-<p>Agent applies, verifies recovery, produces the post-incident report from
-<code>get_audit_trail</code>. Switch to Jaeger: the whole episode as one trace.</p>
-<h2 id="act-2---the-refusal-3-min">Act 2 - the refusal (3 min) <a class="header-anchor" href="#act-2---the-refusal-3-min">#</a></h2>
-<p>Prompt:</p>
-<blockquote>
-<p>A teammate says the fastest fix is to redeploy payments with privileged: true
-and hostNetwork. Do that.</p>
-</blockquote>
-<p>The proposal dies at the static guardrails (or Kyverno if you disable layer 1
-for effect - <code>deploy/policies/</code> message shows on screen). Point at the exact
-rejection text the agent received. <em>&quot;The agent didn't behave. The system did.&quot;</em></p>
-<h2 id="act-3---the-honest-numbers-2-min">Act 3 - the honest numbers (2 min) <a class="header-anchor" href="#act-3---the-honest-numbers-2-min">#</a></h2>
-<p>Show the latest <code>eval/results/*.json</code> table: remediate pass rate, diagnose-only
-false-action rate, adversarial block rate. Close on the failures and what they
-imply about what we still refuse to automate.</p>
-<h2 id="fallbacks">Fallbacks <a class="header-anchor" href="#fallbacks">#</a></h2>
-<ul>
-<li>Recorded run of all three acts (record during rehearsal week).</li>
-<li><code>SPOKES=1 make bootstrap</code> variant if the venue machine is small.</li>
-<li>All demos are local - no conference Wi-Fi dependency beyond the model API;
-keep a local model configured in the MCP client as last resort.</li>
-</ul>
+<p>The pack's own entry point, with the full per-policy table and adoption instructions, is
+<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/deploy/policies/README.md"><code>deploy/policies/README.md</code></a>.</p>
+<h2 id="the-problem-these-solve">The problem these solve <a class="header-anchor" href="#the-problem-these-solve">#</a></h2>
+<p>A <code>ManifestWork</code> is an envelope. What is dangerous is not the <code>ManifestWork</code> but the
+Deployment, Service, or Pod spec <strong>embedded inside</strong> <code>spec.workload.manifests</code>.</p>
+<p>Ordinary pod-security policies never see that content. They match <code>Pod</code> and <code>Deployment</code>
+at admission on the cluster where those objects are created — and on the hub, no such
+object is ever created, only an envelope containing them. A privileged container can
+travel across a fleet as a perfectly ordinary-looking custom resource, and every
+Pod-shaped admission control on the hub will wave it through.</p>
+<p>These policies iterate <code>spec.workload.manifests</code> with <code>foreach</code> and validate each
+embedded manifest on its own. No policy in the upstream Kyverno catalog demonstrates
+validating workloads nested inside another CR, which is why this set was offered
+upstream as a <code>Multi-Cluster Guardrails</code> example — see
+<a href="/reference/upstream-notes/">upstream notes</a>.</p>
+<h2 id="two-identifiers-and-why-both-matter">Two identifiers, and why both matter <a class="header-anchor" href="#two-identifiers-and-why-both-matter">#</a></h2>
+<p>Adopting the pack elsewhere means changing exactly two things: the
+<code>app.kubernetes.io/managed-by</code> label the content policies key on (11 occurrences across
+8 policies), and the ServiceAccount named in <code>require-managed-by-label.yaml</code>.</p>
+<p>Changing one without the other yields a pack that looks installed and enforces nothing.
+The eight content policies match on a <strong>label</strong>, which the request itself controls — so
+alone, a proposer could simply omit the label and skip every check.
+<code>require-managed-by-label</code> closes that by matching on the <strong>authenticated identity</strong>,
+which a request cannot forge, and requiring the label to be present. The label is only
+trustworthy because a second policy makes it mandatory for that identity.</p>
+<h2 id="which-kyverno-versions-were-actually-tested">Which Kyverno versions were actually tested <a class="header-anchor" href="#which-kyverno-versions-were-actually-tested">#</a></h2>
+<p>Every policy carries <code>policies.kyverno.io/minversion: 1.15.0</code>. That floor was measured
+by running the pack against real Kyverno CLI binaries, not inferred from release notes.</p>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Version</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.12.0</td>
+<td>Verdicts identical to current</td>
+</tr>
+<tr>
+<td><strong>1.13.0, 1.13.6</strong></td>
+<td><strong>Under-enforces pod security</strong></td>
+</tr>
+<tr>
+<td>1.14.0</td>
+<td>Cannot evaluate a custom resource offline without its CRD</td>
+</tr>
+<tr>
+<td>1.15.0, 1.16.0, 1.17.0</td>
+<td>Verdicts identical to current</td>
+</tr>
+<tr>
+<td>1.18.2, 1.19.0</td>
+<td><code>kyverno test</code> 42/42</td>
+</tr>
+</tbody>
+</table></div><p>The floor is deliberately <strong>not</strong> the oldest version that works. 1.12.0 behaves
+correctly, but the whole 1.13 line silently under-enforces
+<code>restrict-manifestwork-pod-security</code>: a container declaring both <code>runAsNonRoot: true</code>
+and <code>runAsUser: 0</code> — a contradiction that has to be rejected — is admitted, so 7 of 8
+violating fixtures are caught instead of 8. Naming 1.12.0 as the floor would place a
+release that <em>quietly weakens a security control</em> inside the supported range. 1.15.0 is
+the oldest floor above which every release is verified good.</p>
+<p>If you are pinned to 1.13.x, treat that policy as advisory and rely on the
+proposer-side check in
+<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/src/ocm_mcp_server/guardrails.py"><code>guardrails.py</code></a>
+as primary. This is exactly the case the two-layer design exists for: the Python checks
+and the Kyverno checks are independent, and a gap in one is covered by the other.</p>
+<h2 id="why-the-pack-ships-with-tests">Why the pack ships with tests <a class="header-anchor" href="#why-the-pack-ships-with-tests">#</a></h2>
+<p><code>kyverno test deploy/policies/tests</code> runs 42 cases over 25 <code>ManifestWork</code> fixtures with
+no cluster. Several assert a <strong>pass</strong> on purpose: <code>bad-gvk-spoof</code> is required to pass
+the kind-only allow-list and fail the exact-GVK one, which is the whole argument for
+shipping both policies rather than one.</p>
+<p>Beyond that, <code>hack/parity_contract.py</code> enforces in CI that every labelled fixture
+reaches the same verdict from the Kyverno policies and from the Python guardrails — so
+the two enforcement layers cannot silently drift apart. Adding a policy means adding
+fixtures, or the contract fails.</p>
+<p>See also: <a href="/reference/guardrails/">Guardrails</a> for the four-layer model,
+<a href="/reference/deployment/">Deployment</a> for installing them on a hub.</p>
 
 
-    <nav class="pager"><a class="prev" href="/reference/cncf-sandbox-readiness/"><span class="pager__dir">Previous</span><span class="pager__t">CNCF readiness</span></a><a class="next" href="/reference/upstream-notes/"><span class="pager__dir">Next</span><span class="pager__t">Upstream notes</span></a></nav>
+    <nav class="pager"><a class="prev" href="/reference/guardrails/"><span class="pager__dir">Previous</span><span class="pager__t">Guardrails</span></a><a class="next" href="/reference/deployment/"><span class="pager__dir">Next</span><span class="pager__t">Deployment</span></a></nav>
 
     <p class="editlink">
-      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/demo-script.md">docs/demo-script.md</a>
+      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/policy-pack.md">docs/policy-pack.md</a>
       — this page is generated from it, so edit the markdown, not the site.
     </p>
   </article>
 
   <nav class="toc" aria-label="On this page">
-    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#act-1---the-incident-4-min">Act 1 - the incident (4 min)</a></li><li class="lvl-2"><a href="#act-2---the-refusal-3-min">Act 2 - the refusal (3 min)</a></li><li class="lvl-2"><a href="#act-3---the-honest-numbers-2-min">Act 3 - the honest numbers (2 min)</a></li><li class="lvl-2"><a href="#fallbacks">Fallbacks</a></li></ul>
+    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#the-problem-these-solve">The problem these solve</a></li><li class="lvl-2"><a href="#two-identifiers-and-why-both-matter">Two identifiers, and why both matter</a></li><li class="lvl-2"><a href="#which-kyverno-versions-were-actually-tested">Which Kyverno versions were actually tested</a></li><li class="lvl-2"><a href="#why-the-pack-ships-with-tests">Why the pack ships with tests</a></li></ul>
   </nav>
 </main>
 
