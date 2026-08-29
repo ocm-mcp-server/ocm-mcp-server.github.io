@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/getting-started/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=27d0321dab">
+<link rel="stylesheet" href="/static/site.css?v=e461e15224">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -139,6 +139,14 @@ then run the smoke test:</p>
 <p>Walk through the whole conversation, including approval, in
 <a href="/journey/use-cases-and-impact/">Use Cases and Impact</a> and the
 <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/examples.md">worked examples</a>.</p>
+<figure>
+  <video controls preload="none" playsinline width="100%"
+         poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-e2e-local.jpg">
+    <source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/e2e-local.mp4" type="video/mp4">
+    <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/e2e-local.gif">Watch the recording</a>
+  </video>
+  <figcaption>A real, unedited <code>./hack/e2e-local.sh</code> run: the fleet comes up, every tool and prompt is exercised, something is broken and fixed, and the fleet is deleted again.</figcaption>
+</figure>
 <h2 id="path-b-an-existing-ocm-fleet">Path B: an existing OCM fleet <a class="header-anchor" href="#path-b-an-existing-ocm-fleet">#</a></h2>
 <p>Works with any conformant hub. Apply the identity and policies, wire read-only
 spoke access, point the server at your hub context:</p>

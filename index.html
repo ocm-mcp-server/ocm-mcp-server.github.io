@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=27d0321dab">
+<link rel="stylesheet" href="/static/site.css?v=e461e15224">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -180,6 +180,31 @@
     <li class="stat"><a class="stat__link" href="/reference/policy-pack/">
       <span class="stat__n" data-count="42">42</span><span class="stat__l">policy cases</span><span class="stat__proof">see the pack</span></a></li>
   </ul>
+</section>
+
+<!-- The demo, below the fold on purpose. preload="none" means the recording is
+     not fetched until someone presses play, so the page costs only the poster
+     (11 KB) - the README learned this the expensive way, where an autoplaying
+     GIF was 93% of the above-the-fold weight and shoved the page mid-scroll. -->
+<section class="shell sec" data-reveal>
+  <div class="sec__head">
+    <h2>See it refuse, then see it apply</h2>
+    <p>A fleet operator's day, recorded live against a real fleet - not a mock-up.
+       The privileged <code>:latest</code> shortcut is refused by the guardrails, the
+       pinned proposal is signed by a human with an Ed25519 token, applied, verified,
+       and the whole day is read back from the audit trail.</p>
+  </div>
+  <figure>
+    <video controls preload="none" playsinline width="100%"
+           poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-connect-claude.jpg">
+      <source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.mp4" type="video/mp4">
+      <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif">Watch the recording</a>
+    </video>
+    <figcaption>Every answer is the model's own, over the real MCP protocol.
+      The same ten chapters run against
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/demo/connect-codex.gif">Codex</a>
+      too - the agent is interchangeable, which is the point of speaking MCP.</figcaption>
+  </figure>
 </section>
 
 <section class="shell sec">

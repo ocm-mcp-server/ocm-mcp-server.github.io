@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/how-it-works/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=27d0321dab">
+<link rel="stylesheet" href="/static/site.css?v=e461e15224">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -231,6 +231,14 @@ would look at, not thousand-line objects that burn context.</p>
 <p>Read the four checks as defense in depth: each fails differently, so a gap in
 one is covered by the others. Details in
 <a href="/journey/guardrails-deep-dive/">Guardrails Deep Dive</a>.</p>
+<figure>
+  <video controls preload="none" playsinline width="100%"
+         poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-connect-claude.jpg">
+    <source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.mp4" type="video/mp4">
+    <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif">Watch the recording</a>
+  </video>
+  <figcaption>A fleet operator's day, recorded live: the privileged <code>:latest</code> shortcut is <b>refused</b>, the pinned proposal is <b>signed by a human</b>, applied with the token, verified, and the day read back from the audit trail.</figcaption>
+</figure>
 <h2 id="why-approval-is-a-token-not-a-chat-yes">Why approval is a token, not a chat &quot;yes&quot; <a class="header-anchor" href="#why-approval-is-a-token-not-a-chat-yes">#</a></h2>
 <p>A &quot;yes&quot; in chat approves a conversation. The token approves <em>content</em>. It is an
 <strong>Ed25519 signature</strong> over claims that bind the proposal's SHA-256 hash, the
