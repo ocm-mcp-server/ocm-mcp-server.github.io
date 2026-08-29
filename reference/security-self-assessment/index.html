@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en" data-base="/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security self-assessment · ocm-mcp-server</title>
+<meta name="description" content="This self-assessment follows the structure used by the CNCF TAG-Security self-assessment template(https://github.com/cncf/tag-security/blob/main/community/assessments/guide/self-as…">
+<meta property="og:title" content="Security self-assessment · ocm-mcp-server">
+<meta property="og:description" content="This self-assessment follows the structure used by the CNCF TAG-Security self-assessment template(https://github.com/cncf/tag-security/blob/main/community/assessments/guide/self-as…">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ocm-mcp-server">
+<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/security-self-assessment/">
+<!-- PNG, not the SVG banner: LinkedIn, X, Slack and Facebook all reject SVG
+     for og:image and render no preview at all. Exported at 2400x1260 -
+     the 1.91:1 ratio they crop cleanly, at 2x so it stays sharp on HiDPI
+     displays and when downscaled into a feed. Source: web/og-card.html. -->
+<meta property="og:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Security self-assessment · ocm-mcp-server">
+<meta name="twitter:description" content="This self-assessment follows the structure used by the CNCF TAG-Security self-assessment template(https://github.com/cncf/tag-security/blob/main/community/assessments/guide/self-as…">
+<meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/security-self-assessment/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
+<link rel="stylesheet" href="/static/site.css?v=e77b03863f">
+<script>
+  // Dark is the default for everyone, regardless of OS preference — this is a
+  // dark-first design and it is what the project should lead with. A visitor
+  // who picks light with the toggle keeps it; nothing else overrides them.
+  // Applied before first paint so there is no flash of the wrong theme.
+  (() => {
+    let t;
+    try { t = localStorage.getItem("theme"); } catch { t = null; }
+    document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+    // Motion: only an explicit choice is stamped here. With no attribute the
+    // stylesheet falls through to the OS preference, which is the default.
+    let m;
+    try { m = localStorage.getItem("motion"); } catch { m = null; }
+    if (m === "full" || m === "reduced") document.documentElement.dataset.motion = m;
+
+    // Tell the stylesheet JavaScript is running, which is what allows it to
+    // hide content for the reveal animation. Written in ES5 on purpose: if a
+    // browser cannot parse site.js, it must still parse this.
+    var root = document.documentElement;
+    root.className += " js";
+    // Safety net. If site.js never runs - blocked, offline, a parse error on an
+    // older engine - nothing would ever add the .in class and the page would
+    // stay blank. site.js clears this the moment it starts.
+    window.__revealSafety = setTimeout(function () {
+      root.className += " reveal-all";
+    }, 2000);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="hdr">
+  <!-- This site is a section of sandeepbazar.github.io. The chip is the way up
+       to that parent; the brand beside it stays this project. -->
+  <a class="hdr__home" href="https://sandeepbazar.github.io/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Sandeep Bazar
+  </a>
+  <a class="hdr__brand" href="/">
+    <svg class="hdr__mark" viewBox="0 0 32 32" aria-hidden="true">
+      <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6f6cf6"/><stop offset="1" stop-color="#38bdf8"/>
+      </linearGradient></defs>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="url(#hg)" opacity=".22"/>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="none" stroke="url(#hg)" stroke-width="1.8"/>
+      <path d="m10.8 16.2 3.6 3.7 7-7.4" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    ocm-mcp-server
+  </a>
+  <nav class="hdr__nav"><div class="menu"><a class="menu__t" href="/journey/why-this-exists/">Start here<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Why it exists, how it works, and what it refuses to automate</p><div class="menu__grid"><a href="/journey/why-this-exists/"><span class="menu__n">01</span><span><span class="menu__l">Why this exists</span><span class="menu__d">Every platform team running Kubernetes at scale eventually hears it from l</span></span></a><a href="/journey/the-idea/"><span class="menu__n">02</span><span><span class="menu__l">The idea</span><span class="menu__d">Fleets already have a place where multi-cluster actions are observed and c</span></span></a><a href="/journey/how-it-works/"><span class="menu__n">03</span><span><span class="menu__l">How it works</span><span class="menu__d">The agent talks only to the server. The server holds the kubeconfig, appli</span></span></a><a href="/journey/implementation/"><span class="menu__n">04</span><span><span class="menu__l">Implementation</span><span class="menu__d">What is actually in the code, so you can read it with a map in hand.</span></span></a><a href="/journey/tools-and-prompts/"><span class="menu__n">05</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">35 tools across ten toolsets, plus ten prompts. Almost all of it is read: </span></span></a><a href="/journey/guardrails-deep-dive/"><span class="menu__n">06</span><span><span class="menu__l">Guardrails deep dive</span><span class="menu__d">Four independent layers stand between the model and your clusters. A chang</span></span></a><a href="/journey/getting-started/"><span class="menu__n">07</span><span><span class="menu__l">Getting started</span><span class="menu__d">Three paths, from &quot;try it on a laptop&quot; to &quot;run it against production.&quot; Ful</span></span></a><a href="/journey/use-cases-and-impact/"><span class="menu__n">08</span><span><span class="menu__l">Use cases and impact</span><span class="menu__d">This is not &quot;AI replaces your on-call.&quot; It is &quot;AI does the first fifteen m</span></span></a><a href="/journey/evaluation/"><span class="menu__n">09</span><span><span class="menu__l">Evaluation</span><span class="menu__d">Claims about agent safety are cheap. This project ships a harness that pro</span></span></a><a href="/journey/roadmap/"><span class="menu__n">10</span><span><span class="menu__l">What&#x27;s next</span><span class="menu__d">The pattern is complete and runnable today. These are the directions that </span></span></a><a href="/journey/contributing/"><span class="menu__n">11</span><span><span class="menu__l">Contributing</span><span class="menu__d">Help is welcome, and the project is deliberately structured so that contri</span></span></a><a href="/journey/faq/"><span class="menu__n">12</span><span><span class="menu__l">FAQ</span><span class="menu__d">Open Cluster Management (open-cluster-management.io), the CNCF multi-clust</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/reference/architecture/" aria-current="true">Run it<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Architecture, deployment paths, the tool surface, the threat model</p><div class="menu__grid"><a href="/reference/architecture/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Architecture</span><span class="menu__d">Fleet operations already flow through a hub: Open Cluster Management gives</span></span></a><a href="/reference/guardrails/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Guardrails</span><span class="menu__d">Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are</span></span></a><a href="/reference/deployment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Deployment</span><span class="menu__d">Three paths, in increasing order of seriousness: a laptop fleet for trying</span></span></a><a href="/reference/tools/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">The server exposes 35 tools across ten toolsets plus ten prompts. This pag</span></span></a><a href="/reference/examples/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Worked examples</span><span class="menu__d">Real end-to-end flows. Commands are exact; agent turns are lightly condens</span></span></a><a href="/reference/kubeconfig-contexts/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Kubeconfig contexts</span><span class="menu__d">This server is configured with kubeconfig context names, like kind-hub or </span></span></a><a href="/reference/benchmarks/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Benchmarks</span><span class="menu__d">Two questions this answers: does the hub-side paged list (ocm.pagedlist) s</span></span></a><a href="/reference/security-self-assessment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Security self-assessment</span><span class="menu__d">This self-assessment follows the structure used by the CNCF TAG-Security s</span></span></a><a href="/reference/cncf-sandbox-readiness/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">CNCF readiness</span><span class="menu__d">This document is a self-check of how ocm-mcp-server measures up against th</span></span></a><a href="/reference/demo-script/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Demo script</span><span class="menu__d">Preparation: make bootstrap done, server registered in the MCP client, Jae</span></span></a><a href="/reference/upstream-notes/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Upstream notes</span><span class="menu__d">Draft issue texts, ready to file against the respective projects. Once fil</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/results/test-results/">Proof<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel"><p class="menu__blurb">A real fleet run, multi-model evaluation, coverage</p><div class="menu__grid"><a href="/results/test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">End-to-end fleet run</span><span class="menu__d">Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-07-29 01:34:45 &amp;nbsp;·&amp;n</span></span></a><a href="/results/unit-test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Unit tests and coverage</span><span class="menu__d">Verdict: 🟢 ALL PASSING &amp;nbsp;·&amp;nbsp; generated 2026-07-29 02:25:13 UTC &amp;nb</span></span></a></div></div></div></nav>
+  <div class="hdr__spacer"></div>
+  <button class="iconbtn" id="theme" type="button" aria-label="Toggle colour theme">
+    <svg class="theme-light-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>
+    </svg>
+    <svg class="theme-dark-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/>
+    </svg>
+  </button>
+  <button class="iconbtn" id="motion" type="button" aria-pressed="true" aria-label="Turn animations off">
+    <svg class="motion-on-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h3l3-8 4 16 3-8h7"/>
+    </svg>
+    <svg class="motion-off-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h20"/><path d="m4 4 16 16"/>
+    </svg>
+  </button>
+  <a class="ghlink" href="https://github.com/ocm-mcp-server/ocm-mcp-server">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+    GitHub
+  </a>
+</header>
+
+<main class="doc" id="main">
+  <button class="side__toggle" type="button" aria-expanded="false" aria-controls="sidenav">
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Run it
+  </button>
+
+  <aside class="side" id="sidenav">
+    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/" aria-current="page">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
+  </aside>
+
+  <article class="prose">
+    <h1>Security self-assessment</h1>
+<!-- SPDX-FileCopyrightText: 2026 Sandeep Bazar -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<h1>Security self-assessment</h1>
+<p>This self-assessment follows the structure used by the CNCF TAG-Security
+<a href="https://github.com/cncf/tag-security/blob/main/community/assessments/guide/self-assessment.md" rel="noopener">self-assessment template</a>.
+It is a living document, maintained by the project, describing what the project does,
+its security posture, and where the boundaries of its guarantees lie. It is written to
+be honest about limits, not to market.</p>
+<h2 id="metadata">Metadata <a class="header-anchor" href="#metadata">#</a></h2>
+<div class="table-wrap"><table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Software</td>
+<td>https://github.com/ocm-mcp-server/ocm-mcp-server</td>
+</tr>
+<tr>
+<td>Security provider</td>
+<td>No. The project is a control point that adds safety to agent-driven fleet operations; it is not a security product in itself.</td>
+</tr>
+<tr>
+<td>Languages</td>
+<td>Python</td>
+</tr>
+<tr>
+<td>SBOM</td>
+<td>Dependencies are bounded in <code>pyproject.toml</code> and hash-pinned in <code>requirements.lock</code>; the release container image is published to GHCR with a generated SBOM, build provenance, and a keyless Cosign signature.</td>
+</tr>
+</tbody>
+</table></div><h3 id="security-links">Security links <a class="header-anchor" href="#security-links">#</a></h3>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Document</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Security policy</td>
+<td><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/SECURITY.md">SECURITY.md</a></td>
+</tr>
+<tr>
+<td>Guardrail model and threat model</td>
+<td><a href="/reference/guardrails/">docs/guardrails.md</a></td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td><a href="/reference/architecture/">docs/architecture.md</a></td>
+</tr>
+<tr>
+<td>RBAC</td>
+<td><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/deploy/rbac.yaml">deploy/rbac.yaml</a></td>
+</tr>
+</tbody>
+</table></div><h2 id="overview">Overview <a class="header-anchor" href="#overview">#</a></h2>
+<p>ocm-mcp-server is a Model Context Protocol (MCP) server that lets AI agents operate a
+multi-cluster Kubernetes fleet through an Open Cluster Management (OCM) hub. Its purpose
+is to make that operation <strong>safe by construction</strong>: agents can read the whole fleet
+freely, but any change must be proposed, pass policy admission, and be approved by a
+human before it reaches a cluster.</p>
+<h3 id="background">Background <a class="header-anchor" href="#background">#</a></h3>
+<p>Fleets managed by OCM (and its downstream ACM/MCE) expose a hub with an inventory
+(<code>ManagedCluster</code>), a scheduler (<code>Placement</code>), and a delivery channel (<code>ManifestWork</code>).
+The server exposes this hub to agents as a small, typed set of MCP tools and interposes
+four independent controls between the model and the clusters.</p>
+<h3 id="actors">Actors <a class="header-anchor" href="#actors">#</a></h3>
+<ul>
+<li><strong>AI agent / MCP client</strong> - untrusted with respect to intent; may be prompt-injected.
+It can call tools but never holds a kubeconfig, a Secret, or an exec socket.</li>
+<li><strong>ocm-mcp-server</strong> - the trusted mediator. Holds the hub kubeconfig, applies static
+guardrails, writes the audit log, and talks to the hub.</li>
+<li><strong>OCM hub</strong> - enforces Kyverno policy admission and RBAC.</li>
+<li><strong>Human operator</strong> - the only source of approval tokens, on a trusted terminal.</li>
+</ul>
+<h3 id="actions">Actions <a class="header-anchor" href="#actions">#</a></h3>
+<ol>
+<li><strong>Read</strong> (ungated): the agent lists/gets OCM resources and, where a spoke context is
+configured, reads events, logs, and health. Most reads are summarized; the generic
+reader returns full allow-listed OCM objects (never Secrets or core kinds).</li>
+<li><strong>Propose</strong> (mutates nothing): the agent proposes a ManifestWork or a lifecycle
+action. It passes static guardrails and a Kyverno dry-run on the hub, then is stored
+pending.</li>
+<li><strong>Approve</strong> (human, out of band): the operator runs <code>ocm-mcp approve &lt;id&gt;</code> on a
+trusted terminal, which signs an Ed25519 token bound to the proposal's content hash
+and the intended operation. The server holds only the public verification key.</li>
+<li><strong>Apply</strong> (gated): the agent submits the token; the server re-checks content
+integrity and re-runs guardrails, verifies the token, and applies through
+least-privilege RBAC.</li>
+</ol>
+<h3 id="goals">Goals <a class="header-anchor" href="#goals">#</a></h3>
+<ul>
+<li>An agent cannot cause a change to reach a cluster without policy admission and an
+explicit human approval of the exact content.</li>
+<li>No tool exists that reads Secrets, execs into pods, or deletes arbitrary resources.</li>
+<li>Every tool call is recorded in an append-only audit log.</li>
+</ul>
+<h3 id="non-goals">Non-goals <a class="header-anchor" href="#non-goals">#</a></h3>
+<ul>
+<li>The project does not defend against a compromised or malicious <strong>human operator</strong>, who
+is the trust anchor for writes.</li>
+<li>It does not defend against a compromised <strong>hub cluster</strong> or its Kubernetes API server.</li>
+<li>It does not sandbox the model itself; it constrains what the model can <em>do</em>, not what
+it can <em>say</em>.</li>
+</ul>
+<h2 id="security-functions-and-features">Security functions and features <a class="header-anchor" href="#security-functions-and-features">#</a></h2>
+<h3 id="critical">Critical <a class="header-anchor" href="#critical">#</a></h3>
+<ul>
+<li><strong>Asymmetric, operation-bound, one-time human approval.</strong> Approval is an Ed25519
+signature over claims that bind the exact proposal content hash, the operation (<code>apply</code>
+or <code>rollback</code>), the issuer and audience, a unique token id, and an expiry. The token is
+single-use: its id is recorded as spent under a lock on first use, so it cannot be
+replayed. An apply token cannot authorize a rollback, and a change to any byte of the
+proposal invalidates the signature. The keypair is rotatable with <code>ocm-mcp rotate-secret</code>, and a planned rotation can keep a previous verifier key valid until
+outstanding tokens expire.
+<strong>Isolation boundary (be precise):</strong> the MCP server needs only the public verifier key,
+but &quot;a compromised server cannot mint a token&quot; holds <strong>only when the private signing key
+is kept off the server</strong> - a separate OS account or device via <code>OCM_MCP_SIGNER_KEY</code>, or a
+chat-ops/ticket signer. When signer and server share one <code>OCM_MCP_HOME</code>, a compromised
+server process could read the private key; there, signer isolation is a filesystem
+convention, not an enforced boundary. Off-box signing is required for the stronger claim.</li>
+<li><strong>Bound CSR approval.</strong> The <code>accept</code> lifecycle action captures the pending join CSRs
+(name, UID, signer, requester, and a hash of the PKCS#10 request) at propose time and
+approves only those exact CSRs at apply time, re-verifying that each is still a pending,
+not-denied, OCM client-auth join CSR (signer, an OCM group, <code>client auth</code> usage, OCM
+bootstrap username) bound to the target cluster, that the PKCS#10 request bytes are
+unchanged since the human reviewed, and that the parsed certificate subject Common Name
+is the OCM agent identity for that cluster. It never sweeps every CSR with a matching
+label, and never approves a CSR created or altered after the human review.</li>
+<li><strong>Rollback as a distinct operation.</strong> Undoing an applied change requires a separate
+rollback proposal bound to the ManifestWork's UID and a rollback-scoped token; the
+server verifies the work is still ours (managed-by label) with the approved UID before
+deleting it.</li>
+<li><strong>Policy admission.</strong> Every proposed ManifestWork is dry-run created on the hub so
+Kyverno validating policies run during admission and reject non-compliant content
+before anything is stored or applied.</li>
+<li><strong>Allow-listed capability surface.</strong> The tool set is fixed and small. The generic
+reader accepts only an allow-list of OCM API types, so Secrets and core kinds are not
+expressible - the dangerous read does not exist rather than being merely restricted.</li>
+<li><strong>Least-privilege RBAC.</strong> The hub identity (<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/deploy/rbac.yaml">deploy/rbac.yaml</a>)
+grants exactly the verbs the tools use: read across the OCM API, plus create/delete
+ManifestWorks and ManagedClusterAddOns, patch ManagedClusters, and approve OCM join
+CSRs. No Secret reads, no exec, no arbitrary delete. RBAC cannot restrict writes to
+&quot;only objects this server created&quot;, so per-object ownership is enforced in the
+application (managed-by label + approved UID), not by RBAC.</li>
+<li><strong>Requester-bound policy (no label bypass).</strong> A Kyverno policy matches ManifestWorks by
+the server's ServiceAccount identity (<code>request.userInfo</code>) and requires the
+<code>managed-by</code> label, so the server SA cannot create an unlabeled ManifestWork that would
+skip the content policies keyed on that label.</li>
+</ul>
+<h3 id="security-relevant">Security-relevant <a class="header-anchor" href="#security-relevant">#</a></h3>
+<ul>
+<li><strong>Restricted-Pod-Security guardrails.</strong> Static checks enforce a Restricted baseline on
+every embedded workload (and its init/ephemeral containers): exact <code>apiVersion/kind</code>
+allow-list (blocks group spoofing), no host namespaces, <code>automountServiceAccountToken: false</code>, no arbitrary service account, an allow-list of volume and Service types (no
+PVC/CSI/hostPath/secret, no NodePort/LoadBalancer/externalIPs), required
+<code>runAsNonRoot</code>, <code>allowPrivilegeEscalation: false</code>, all capabilities dropped, a seccomp
+profile, no indirect Secret access, and pinned images (optionally digest-pinned via
+<code>OCM_MCP_REQUIRE_DIGEST</code>). Inputs are schema-checked first, so a malformed manifest is a
+clean rejection, not a crash. Checks run before policy admission and again at apply.</li>
+<li><strong>Apply-time integrity re-check</strong> recomputes the proposal's content hash and re-runs
+guardrails at apply, closing a time-of-check/time-of-use gap on the state directory.</li>
+<li><strong>Hardened state store.</strong> Proposal ids are validated (no path traversal); writes are
+atomic (temp + fsync + rename) under a file lock; status advances only along legal
+transitions, so a stale file cannot be re-applied.</li>
+<li><strong>Tamper-evident audit.</strong> Each audit line carries an actor, a monotonic sequence number,
+and a hash chained to the previous entry; <code>ocm-mcp audit-verify</code> recomputes the chain and
+detects any edit, reordering, or mid-log deletion. Tail truncation and wholesale rewrites
+are covered by signed anchors: <code>ocm-mcp audit-anchor</code> (run from the trusted terminal, like
+minting an approval) signs the chain head with the off-box approval key, and
+<code>audit-verify</code> fails unless the log still extends every anchored head. Entries newer than
+the last anchor are unprotected until the next anchor - run it on a schedule. An
+audit-write failure is surfaced to stderr and never masks a tool's result.</li>
+<li><strong>Bounded, timed spoke reads</strong> cap result size and set request timeouts so one large
+cluster cannot hang or flood a call.</li>
+<li><strong>Read-only mode</strong> (<code>OCM_MCP_READ_ONLY=1</code>) disables both write toolsets as a coarse
+backstop under the token gate.</li>
+<li><strong>Observability</strong>: the append-only audit log, plus optional OpenTelemetry spans and an
+optional Prometheus <code>/metrics</code> endpoint (<code>OCM_MCP_METRICS_PORT</code>). Approval tokens are
+redacted from all three.</li>
+</ul>
+<h2 id="project-compliance">Project compliance <a class="header-anchor" href="#project-compliance">#</a></h2>
+<p>The project does not currently claim compliance with a specific external standard (for
+example NIST SSDF or FedRAMP). It aligns with common cloud native security practices:
+least privilege, defense in depth, no secrets in code, signed-off commits, and a
+documented threat model.</p>
+<h2 id="secure-development-practices">Secure development practices <a class="header-anchor" href="#secure-development-practices">#</a></h2>
+<ul>
+<li><strong>Development pipeline</strong>: contributions arrive via pull request. CI runs linting and
+format checks (ruff), static typing (mypy), the unit test suite with a coverage gate
+(404 tests, 100% branch coverage, no cluster required), the offline Kyverno policy tests
+(42 cases, including a
+requester-identity bypass test), a dependency review, and a secret scan (gitleaks). A
+CodeQL workflow scans the code.</li>
+<li><strong>Commits</strong>: new contributions are asked to sign off under the Developer Certificate
+of Origin via the pull-request checklist; automated DCO enforcement is not yet wired
+up, and part of the early single-maintainer history predates the sign-off practice.</li>
+<li><strong>Dependencies</strong> are bounded above and below in <code>pyproject.toml</code> and pinned with hashes
+in <code>requirements.lock</code>; Dependabot proposes updates for pip and GitHub Actions.</li>
+<li><strong>Container image</strong> is built from a minimal base and published to GHCR on a release with
+a generated SBOM, build provenance, and a keyless Cosign signature.</li>
+</ul>
+<h2 id="security-issue-resolution">Security issue resolution <a class="header-anchor" href="#security-issue-resolution">#</a></h2>
+<ul>
+<li><strong>Reporting</strong>: see <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/SECURITY.md">SECURITY.md</a>. Vulnerabilities are reported
+privately (via GitHub private advisories or by contacting a maintainer on LinkedIn),
+not in public issues.</li>
+<li><strong>Response</strong>: a maintainer acknowledges the report, confirms the issue, prepares a fix
+on a private branch when warranted, and coordinates disclosure with the reporter.</li>
+</ul>
+<h2 id="appendix">Appendix <a class="header-anchor" href="#appendix">#</a></h2>
+<ul>
+<li><strong>Known limitations</strong>: the human operator and the hub are trusted; the model is
+constrained but not sandboxed; add-on APIs (policy, HyperShift, ManagedClusterInfo)
+are feature-detected and degrade to a clear message when absent.</li>
+<li><strong>Related work and positioning</strong>: see the README section &quot;Related projects, and a note
+on the name&quot; for how this project's trade-off (fixed tool surface, mandatory approval)
+differs from kubectl-granting alternatives.</li>
+</ul>
+
+
+    <nav class="pager"><a class="prev" href="/reference/benchmarks/"><span class="pager__dir">Previous</span><span class="pager__t">Benchmarks</span></a><a class="next" href="/reference/cncf-sandbox-readiness/"><span class="pager__dir">Next</span><span class="pager__t">CNCF readiness</span></a></nav>
+
+    <p class="editlink">
+      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/security-self-assessment.md">docs/security-self-assessment.md</a>
+      — this page is generated from it, so edit the markdown, not the site.
+    </p>
+  </article>
+
+  <nav class="toc" aria-label="On this page">
+    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#metadata">Metadata</a></li><li class="lvl-3"><a href="#security-links">Security links</a></li><li class="lvl-2"><a href="#overview">Overview</a></li><li class="lvl-3"><a href="#background">Background</a></li><li class="lvl-3"><a href="#actors">Actors</a></li><li class="lvl-3"><a href="#actions">Actions</a></li><li class="lvl-3"><a href="#goals">Goals</a></li><li class="lvl-3"><a href="#non-goals">Non-goals</a></li><li class="lvl-2"><a href="#security-functions-and-features">Security functions and features</a></li><li class="lvl-3"><a href="#critical">Critical</a></li><li class="lvl-3"><a href="#security-relevant">Security-relevant</a></li><li class="lvl-2"><a href="#project-compliance">Project compliance</a></li><li class="lvl-2"><a href="#secure-development-practices">Secure development practices</a></li><li class="lvl-2"><a href="#security-issue-resolution">Security issue resolution</a></li><li class="lvl-2"><a href="#appendix">Appendix</a></li></ul>
+  </nav>
+</main>
+
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <span>Built and maintained by <a href="https://www.linkedin.com/in/sandeepbazar/">Sandeep Bazar</a> · Apache-2.0 · generated from the repository's own markdown</span>
+    <nav>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server">Code</a>
+      <a href="https://pypi.org/p/ocm-mcp-server">PyPI</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/wiki">Wiki</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/static/site.js?v=b72157bb91" defer></script>
+</body>
+</html>

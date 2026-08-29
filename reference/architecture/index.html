@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en" data-base="/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture · ocm-mcp-server</title>
+<meta name="description" content="Fleet operations already flow through a hub: Open Cluster Management gives us cluster inventory (ManagedCluster), scheduling (Placement), and delivery (ManifestWork). Instead of ha…">
+<meta property="og:title" content="Architecture · ocm-mcp-server">
+<meta property="og:description" content="Fleet operations already flow through a hub: Open Cluster Management gives us cluster inventory (ManagedCluster), scheduling (Placement), and delivery (ManifestWork). Instead of ha…">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ocm-mcp-server">
+<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/architecture/">
+<!-- PNG, not the SVG banner: LinkedIn, X, Slack and Facebook all reject SVG
+     for og:image and render no preview at all. Exported at 2400x1260 -
+     the 1.91:1 ratio they crop cleanly, at 2x so it stays sharp on HiDPI
+     displays and when downscaled into a feed. Source: web/og-card.html. -->
+<meta property="og:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Architecture · ocm-mcp-server">
+<meta name="twitter:description" content="Fleet operations already flow through a hub: Open Cluster Management gives us cluster inventory (ManagedCluster), scheduling (Placement), and delivery (ManifestWork). Instead of ha…">
+<meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/architecture/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
+<link rel="stylesheet" href="/static/site.css?v=e77b03863f">
+<script>
+  // Dark is the default for everyone, regardless of OS preference — this is a
+  // dark-first design and it is what the project should lead with. A visitor
+  // who picks light with the toggle keeps it; nothing else overrides them.
+  // Applied before first paint so there is no flash of the wrong theme.
+  (() => {
+    let t;
+    try { t = localStorage.getItem("theme"); } catch { t = null; }
+    document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+    // Motion: only an explicit choice is stamped here. With no attribute the
+    // stylesheet falls through to the OS preference, which is the default.
+    let m;
+    try { m = localStorage.getItem("motion"); } catch { m = null; }
+    if (m === "full" || m === "reduced") document.documentElement.dataset.motion = m;
+
+    // Tell the stylesheet JavaScript is running, which is what allows it to
+    // hide content for the reveal animation. Written in ES5 on purpose: if a
+    // browser cannot parse site.js, it must still parse this.
+    var root = document.documentElement;
+    root.className += " js";
+    // Safety net. If site.js never runs - blocked, offline, a parse error on an
+    // older engine - nothing would ever add the .in class and the page would
+    // stay blank. site.js clears this the moment it starts.
+    window.__revealSafety = setTimeout(function () {
+      root.className += " reveal-all";
+    }, 2000);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="hdr">
+  <!-- This site is a section of sandeepbazar.github.io. The chip is the way up
+       to that parent; the brand beside it stays this project. -->
+  <a class="hdr__home" href="https://sandeepbazar.github.io/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Sandeep Bazar
+  </a>
+  <a class="hdr__brand" href="/">
+    <svg class="hdr__mark" viewBox="0 0 32 32" aria-hidden="true">
+      <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6f6cf6"/><stop offset="1" stop-color="#38bdf8"/>
+      </linearGradient></defs>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="url(#hg)" opacity=".22"/>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="none" stroke="url(#hg)" stroke-width="1.8"/>
+      <path d="m10.8 16.2 3.6 3.7 7-7.4" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    ocm-mcp-server
+  </a>
+  <nav class="hdr__nav"><div class="menu"><a class="menu__t" href="/journey/why-this-exists/">Start here<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Why it exists, how it works, and what it refuses to automate</p><div class="menu__grid"><a href="/journey/why-this-exists/"><span class="menu__n">01</span><span><span class="menu__l">Why this exists</span><span class="menu__d">Every platform team running Kubernetes at scale eventually hears it from l</span></span></a><a href="/journey/the-idea/"><span class="menu__n">02</span><span><span class="menu__l">The idea</span><span class="menu__d">Fleets already have a place where multi-cluster actions are observed and c</span></span></a><a href="/journey/how-it-works/"><span class="menu__n">03</span><span><span class="menu__l">How it works</span><span class="menu__d">The agent talks only to the server. The server holds the kubeconfig, appli</span></span></a><a href="/journey/implementation/"><span class="menu__n">04</span><span><span class="menu__l">Implementation</span><span class="menu__d">What is actually in the code, so you can read it with a map in hand.</span></span></a><a href="/journey/tools-and-prompts/"><span class="menu__n">05</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">35 tools across ten toolsets, plus ten prompts. Almost all of it is read: </span></span></a><a href="/journey/guardrails-deep-dive/"><span class="menu__n">06</span><span><span class="menu__l">Guardrails deep dive</span><span class="menu__d">Four independent layers stand between the model and your clusters. A chang</span></span></a><a href="/journey/getting-started/"><span class="menu__n">07</span><span><span class="menu__l">Getting started</span><span class="menu__d">Three paths, from &quot;try it on a laptop&quot; to &quot;run it against production.&quot; Ful</span></span></a><a href="/journey/use-cases-and-impact/"><span class="menu__n">08</span><span><span class="menu__l">Use cases and impact</span><span class="menu__d">This is not &quot;AI replaces your on-call.&quot; It is &quot;AI does the first fifteen m</span></span></a><a href="/journey/evaluation/"><span class="menu__n">09</span><span><span class="menu__l">Evaluation</span><span class="menu__d">Claims about agent safety are cheap. This project ships a harness that pro</span></span></a><a href="/journey/roadmap/"><span class="menu__n">10</span><span><span class="menu__l">What&#x27;s next</span><span class="menu__d">The pattern is complete and runnable today. These are the directions that </span></span></a><a href="/journey/contributing/"><span class="menu__n">11</span><span><span class="menu__l">Contributing</span><span class="menu__d">Help is welcome, and the project is deliberately structured so that contri</span></span></a><a href="/journey/faq/"><span class="menu__n">12</span><span><span class="menu__l">FAQ</span><span class="menu__d">Open Cluster Management (open-cluster-management.io), the CNCF multi-clust</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/reference/architecture/" aria-current="true">Run it<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Architecture, deployment paths, the tool surface, the threat model</p><div class="menu__grid"><a href="/reference/architecture/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Architecture</span><span class="menu__d">Fleet operations already flow through a hub: Open Cluster Management gives</span></span></a><a href="/reference/guardrails/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Guardrails</span><span class="menu__d">Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are</span></span></a><a href="/reference/deployment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Deployment</span><span class="menu__d">Three paths, in increasing order of seriousness: a laptop fleet for trying</span></span></a><a href="/reference/tools/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">The server exposes 35 tools across ten toolsets plus ten prompts. This pag</span></span></a><a href="/reference/examples/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Worked examples</span><span class="menu__d">Real end-to-end flows. Commands are exact; agent turns are lightly condens</span></span></a><a href="/reference/kubeconfig-contexts/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Kubeconfig contexts</span><span class="menu__d">This server is configured with kubeconfig context names, like kind-hub or </span></span></a><a href="/reference/benchmarks/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Benchmarks</span><span class="menu__d">Two questions this answers: does the hub-side paged list (ocm.pagedlist) s</span></span></a><a href="/reference/security-self-assessment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Security self-assessment</span><span class="menu__d">This self-assessment follows the structure used by the CNCF TAG-Security s</span></span></a><a href="/reference/cncf-sandbox-readiness/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">CNCF readiness</span><span class="menu__d">This document is a self-check of how ocm-mcp-server measures up against th</span></span></a><a href="/reference/demo-script/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Demo script</span><span class="menu__d">Preparation: make bootstrap done, server registered in the MCP client, Jae</span></span></a><a href="/reference/upstream-notes/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Upstream notes</span><span class="menu__d">Draft issue texts, ready to file against the respective projects. Once fil</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/results/test-results/">Proof<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel"><p class="menu__blurb">A real fleet run, multi-model evaluation, coverage</p><div class="menu__grid"><a href="/results/test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">End-to-end fleet run</span><span class="menu__d">Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-07-29 01:34:45 &amp;nbsp;·&amp;n</span></span></a><a href="/results/unit-test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Unit tests and coverage</span><span class="menu__d">Verdict: 🟢 ALL PASSING &amp;nbsp;·&amp;nbsp; generated 2026-07-29 02:25:13 UTC &amp;nb</span></span></a></div></div></div></nav>
+  <div class="hdr__spacer"></div>
+  <button class="iconbtn" id="theme" type="button" aria-label="Toggle colour theme">
+    <svg class="theme-light-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>
+    </svg>
+    <svg class="theme-dark-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/>
+    </svg>
+  </button>
+  <button class="iconbtn" id="motion" type="button" aria-pressed="true" aria-label="Turn animations off">
+    <svg class="motion-on-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h3l3-8 4 16 3-8h7"/>
+    </svg>
+    <svg class="motion-off-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h20"/><path d="m4 4 16 16"/>
+    </svg>
+  </button>
+  <a class="ghlink" href="https://github.com/ocm-mcp-server/ocm-mcp-server">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+    GitHub
+  </a>
+</header>
+
+<main class="doc" id="main">
+  <button class="side__toggle" type="button" aria-expanded="false" aria-controls="sidenav">
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Run it
+  </button>
+
+  <aside class="side" id="sidenav">
+    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/" aria-current="page">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
+  </aside>
+
+  <article class="prose">
+    <h1>Architecture</h1>
+
+<h2 id="the-choke-point-idea">The choke-point idea <a class="header-anchor" href="#the-choke-point-idea">#</a></h2>
+<p>Fleet operations already flow through a hub: Open Cluster Management gives us
+cluster inventory (<code>ManagedCluster</code>), scheduling (<code>Placement</code>), and delivery
+(<code>ManifestWork</code>). Instead of handing an agent N kubeconfigs, we hand it a
+narrow, typed view of that hub - one place to observe, one place to constrain.</p>
+<pre><code>agent (any MCP client)
+   │  typed MCP tools
+   ▼
+ocm-mcp-server ──── audit.jsonl (every call)
+   │                 └─ OTel spans → Jaeger
+   │ static guardrails (layer 1)
+   ▼
+OCM hub API
+   │ Kyverno admission, incl. dry-run   (layer 2)
+   │ human approval token               (layer 3)
+   │ least-privilege RBAC               (layer 4)
+   ▼
+ManifestWork → work agent on each managed cluster
+</code></pre>
+<h2 id="components">Components <a class="header-anchor" href="#components">#</a></h2>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server.py</code></td>
+<td>FastMCP server; the only surface the agent sees</td>
+</tr>
+<tr>
+<td><code>ocm.py</code></td>
+<td>ManagedCluster / ManifestWork operations, summarized for agents</td>
+</tr>
+<tr>
+<td><code>guardrails.py</code></td>
+<td>layer-1 static checks (exact GVK allow-list, namespaces, Restricted Pod Security, volume/service allow-lists, image pinning, per-proposal limits)</td>
+</tr>
+<tr>
+<td><code>approvals.py</code></td>
+<td>proposal store + one-time Ed25519 approval tokens binding the content hash, operation, issuer/audience, and TTL (server holds only the public key)</td>
+</tr>
+<tr>
+<td><code>tracing.py</code></td>
+<td>OTel span + hash-chained audit line per tool call</td>
+</tr>
+<tr>
+<td><code>metrics.py</code></td>
+<td>optional Prometheus <code>/metrics</code> endpoint</td>
+</tr>
+<tr>
+<td><code>filelock.py</code></td>
+<td>advisory file locks (atomic proposal writes, spent-token ledger, per-proposal apply lock)</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td><code>ocm-mcp</code> - the human approval terminal (approve/reject/audit-verify/doctor/rotate-secret)</td>
+</tr>
+<tr>
+<td><code>deploy/policies/</code></td>
+<td>Kyverno ClusterPolicies validating <strong>inside</strong> the ManifestWork envelope</td>
+</tr>
+<tr>
+<td><code>deploy/rbac.yaml</code></td>
+<td>hub ServiceAccount: read across the OCM API (cluster/placement/addon/operator/policy/HyperShift/ManagedClusterInfo), create/delete ManifestWorks and add-ons, patch ManagedClusters, approve OCM join CSRs. No Secret reads, no exec, no arbitrary delete. Ownership of a work is enforced in-app, not by RBAC</td>
+</tr>
+</tbody>
+</table></div><h2 id="low-level-design---the-full-internals-vertically">Low-level design - the full internals, vertically <a class="header-anchor" href="#low-level-design---the-full-internals-vertically">#</a></h2>
+<p>Everything below is the same system, cut five ways: the full component stack, the
+anatomy of one read call, the complete gated write sequence, the integrity
+machinery (state, keys, audit), and the observability signals. File references
+are to <code>src/ocm_mcp_server/</code>.</p>
+<h3 id="1-the-full-vertical-stack">1. The full vertical stack <a class="header-anchor" href="#1-the-full-vertical-stack">#</a></h3>
+<p>Every box is a real component; every arrow is a real call path or protocol.</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    subgraph CLIENT[&quot;AGENT SIDE - any MCP client&quot;]
+        A[&quot;AI agent&lt;br/&gt;sees ONLY:&lt;br/&gt;35 tools, 10 prompts,&lt;br/&gt;6 resources&lt;br/&gt;never: kubeconfig,&lt;br/&gt;Secrets, exec, kubectl&quot;]
+    end
+
+    A -- &quot;MCP JSON-RPC 2.0&lt;br/&gt;over stdio&quot; --&gt; B
+
+    subgraph SERVER[&quot;SERVER PROCESS - ocm-mcp-server&quot;]
+        B[&quot;FastMCP dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
+        B --&gt; C[&quot;traced_tool wrapper&lt;br/&gt;tracing.py&lt;br/&gt;1. optional OTel span&lt;br/&gt;2. classify outcome&lt;br/&gt;3. hash-chained audit line&lt;br/&gt;4. metrics.record&quot;]
+        C --&gt; D{&quot;toolset?&quot;}
+        D -- &quot;reads: 29 tools,&lt;br/&gt;6 resources&quot; --&gt; E[&quot;_read wrapper&lt;br/&gt;server.py&lt;br/&gt;missing API -&gt; UNAVAILABLE&lt;br/&gt;ApiException -&gt; clear&lt;br/&gt;message, no stack trace&quot;]
+        D -- &quot;writes: 6 tools&quot; --&gt; F[&quot;gate chain&lt;br/&gt;read-only backstop&lt;br/&gt;size cap, schema&lt;br/&gt;static guardrails&lt;br/&gt;Kyverno dry-run&lt;br/&gt;proposal store&lt;br/&gt;human token, apply&quot;]
+        E --&gt; G[&quot;ocm.py&lt;br/&gt;typed OCM operations&lt;br/&gt;summarized CRs&lt;br/&gt;paged_list: limit 500,&lt;br/&gt;continue tokens,&lt;br/&gt;5000-item ceiling&quot;]
+        F --&gt; G
+        G --&gt; H[&quot;k8s.py client factory&lt;br/&gt;ApiClient cache per&lt;br/&gt;context, TTL 600 s&lt;br/&gt;hub: CustomObjectsApi&lt;br/&gt;spokes: CoreV1, AppsV1&lt;br/&gt;bounded, timed reads&quot;]
+    end
+
+    subgraph STATE[&quot;LOCAL STATE - OCM_MCP_HOME&quot;]
+        S1[&quot;proposals/uuid.json&lt;br/&gt;0600, fsync, flock&lt;br/&gt;pending -&gt; approved -&gt;&lt;br/&gt;applied -&gt; rolled_back&lt;br/&gt;forward-only&quot;]
+        S2[&quot;audit.jsonl&lt;br/&gt;hash chain&lt;br/&gt;audit_anchors.jsonl&lt;br/&gt;signed heads&quot;]
+        S3[&quot;approval_ed25519.pub&lt;br/&gt;verifier key ONLY&lt;br/&gt;server can never sign&quot;]
+        S4[&quot;used_tokens.jsonl&lt;br/&gt;spent jti ledger&lt;br/&gt;compacted at 2000&quot;]
+    end
+    F -.-&gt; S1
+    C -.-&gt; S2
+    F -.-&gt; S3
+    F -.-&gt; S4
+
+    subgraph HUMAN[&quot;TRUSTED TERMINAL - ocm-mcp CLI&quot;]
+        T1[&quot;ocm-mcp pending / show&lt;br/&gt;human reviews the&lt;br/&gt;EXACT manifests&quot;]
+        T2[&quot;ocm-mcp approve&lt;br/&gt;signs claims with the&lt;br/&gt;Ed25519 PRIVATE key&lt;br/&gt;ideally off-box or KMS&quot;]
+        T3[&quot;ocm-mcp audit-anchor&lt;br/&gt;and audit-verify&lt;br/&gt;sign + verify the&lt;br/&gt;audit chain head&quot;]
+    end
+    T1 -. reads .-&gt; S1
+    T2 -- &quot;token handed over&lt;br/&gt;out-of-band&quot; --&gt; A
+    T3 -.-&gt; S2
+
+    H -- &quot;HTTPS to hub apiserver&lt;br/&gt;OCM_MCP_HUB_CONTEXT&quot; --&gt; I
+
+    subgraph HUB[&quot;OCM HUB CLUSTER&quot;]
+        I[&quot;kube-apiserver&quot;]
+        I --&gt; J[&quot;Kyverno admission&lt;br/&gt;9 ClusterPolicies&lt;br/&gt;match ManifestWork&lt;br/&gt;foreach embedded manifest&lt;br/&gt;label + requester scoped&lt;br/&gt;dry-run = layer 2 gate&lt;br/&gt;at propose time&quot;]
+        J --&gt; K[&quot;RBAC rbac.yaml&lt;br/&gt;read OCM groups&lt;br/&gt;create/delete works&lt;br/&gt;patch clusters&lt;br/&gt;scoped CSR approval&lt;br/&gt;NO secrets, NO exec,&lt;br/&gt;NO arbitrary delete&quot;]
+        K --&gt; L[&quot;OCM control plane CRs&lt;br/&gt;ManagedCluster, Placement&lt;br/&gt;PlacementDecision&lt;br/&gt;ManifestWork, MWRS&lt;br/&gt;ManagedClusterAddOn&lt;br/&gt;Policy, CSR&quot;]
+    end
+
+    L -- &quot;OCM work agents&lt;br/&gt;klusterlet pull model&quot; --&gt; M
+
+    subgraph SPOKES[&quot;MANAGED CLUSTERS - spokes&quot;]
+        M[&quot;klusterlet applies the&lt;br/&gt;embedded manifests&lt;br/&gt;status feeds back into&lt;br/&gt;ManifestWork status&lt;br/&gt;Applied / Available&quot;]
+        N[&quot;ocm-mcp-reader SA&lt;br/&gt;read-only RBAC for&lt;br/&gt;health, events, pod logs&lt;br/&gt;production: cluster-proxy&quot;]
+    end
+    H -- &quot;HTTPS bounded reads&lt;br/&gt;limit 500, timeout 5/30 s&quot; --&gt; N
+"></div><pre class="mermaid-src"><code>flowchart TD
+    subgraph CLIENT[&quot;AGENT SIDE - any MCP client&quot;]
+        A[&quot;AI agent&lt;br/&gt;sees ONLY:&lt;br/&gt;35 tools, 10 prompts,&lt;br/&gt;6 resources&lt;br/&gt;never: kubeconfig,&lt;br/&gt;Secrets, exec, kubectl&quot;]
+    end
+
+    A -- &quot;MCP JSON-RPC 2.0&lt;br/&gt;over stdio&quot; --&gt; B
+
+    subgraph SERVER[&quot;SERVER PROCESS - ocm-mcp-server&quot;]
+        B[&quot;FastMCP dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
+        B --&gt; C[&quot;traced_tool wrapper&lt;br/&gt;tracing.py&lt;br/&gt;1. optional OTel span&lt;br/&gt;2. classify outcome&lt;br/&gt;3. hash-chained audit line&lt;br/&gt;4. metrics.record&quot;]
+        C --&gt; D{&quot;toolset?&quot;}
+        D -- &quot;reads: 29 tools,&lt;br/&gt;6 resources&quot; --&gt; E[&quot;_read wrapper&lt;br/&gt;server.py&lt;br/&gt;missing API -&gt; UNAVAILABLE&lt;br/&gt;ApiException -&gt; clear&lt;br/&gt;message, no stack trace&quot;]
+        D -- &quot;writes: 6 tools&quot; --&gt; F[&quot;gate chain&lt;br/&gt;read-only backstop&lt;br/&gt;size cap, schema&lt;br/&gt;static guardrails&lt;br/&gt;Kyverno dry-run&lt;br/&gt;proposal store&lt;br/&gt;human token, apply&quot;]
+        E --&gt; G[&quot;ocm.py&lt;br/&gt;typed OCM operations&lt;br/&gt;summarized CRs&lt;br/&gt;paged_list: limit 500,&lt;br/&gt;continue tokens,&lt;br/&gt;5000-item ceiling&quot;]
+        F --&gt; G
+        G --&gt; H[&quot;k8s.py client factory&lt;br/&gt;ApiClient cache per&lt;br/&gt;context, TTL 600 s&lt;br/&gt;hub: CustomObjectsApi&lt;br/&gt;spokes: CoreV1, AppsV1&lt;br/&gt;bounded, timed reads&quot;]
+    end
+
+    subgraph STATE[&quot;LOCAL STATE - OCM_MCP_HOME&quot;]
+        S1[&quot;proposals/uuid.json&lt;br/&gt;0600, fsync, flock&lt;br/&gt;pending -&gt; approved -&gt;&lt;br/&gt;applied -&gt; rolled_back&lt;br/&gt;forward-only&quot;]
+        S2[&quot;audit.jsonl&lt;br/&gt;hash chain&lt;br/&gt;audit_anchors.jsonl&lt;br/&gt;signed heads&quot;]
+        S3[&quot;approval_ed25519.pub&lt;br/&gt;verifier key ONLY&lt;br/&gt;server can never sign&quot;]
+        S4[&quot;used_tokens.jsonl&lt;br/&gt;spent jti ledger&lt;br/&gt;compacted at 2000&quot;]
+    end
+    F -.-&gt; S1
+    C -.-&gt; S2
+    F -.-&gt; S3
+    F -.-&gt; S4
+
+    subgraph HUMAN[&quot;TRUSTED TERMINAL - ocm-mcp CLI&quot;]
+        T1[&quot;ocm-mcp pending / show&lt;br/&gt;human reviews the&lt;br/&gt;EXACT manifests&quot;]
+        T2[&quot;ocm-mcp approve&lt;br/&gt;signs claims with the&lt;br/&gt;Ed25519 PRIVATE key&lt;br/&gt;ideally off-box or KMS&quot;]
+        T3[&quot;ocm-mcp audit-anchor&lt;br/&gt;and audit-verify&lt;br/&gt;sign + verify the&lt;br/&gt;audit chain head&quot;]
+    end
+    T1 -. reads .-&gt; S1
+    T2 -- &quot;token handed over&lt;br/&gt;out-of-band&quot; --&gt; A
+    T3 -.-&gt; S2
+
+    H -- &quot;HTTPS to hub apiserver&lt;br/&gt;OCM_MCP_HUB_CONTEXT&quot; --&gt; I
+
+    subgraph HUB[&quot;OCM HUB CLUSTER&quot;]
+        I[&quot;kube-apiserver&quot;]
+        I --&gt; J[&quot;Kyverno admission&lt;br/&gt;9 ClusterPolicies&lt;br/&gt;match ManifestWork&lt;br/&gt;foreach embedded manifest&lt;br/&gt;label + requester scoped&lt;br/&gt;dry-run = layer 2 gate&lt;br/&gt;at propose time&quot;]
+        J --&gt; K[&quot;RBAC rbac.yaml&lt;br/&gt;read OCM groups&lt;br/&gt;create/delete works&lt;br/&gt;patch clusters&lt;br/&gt;scoped CSR approval&lt;br/&gt;NO secrets, NO exec,&lt;br/&gt;NO arbitrary delete&quot;]
+        K --&gt; L[&quot;OCM control plane CRs&lt;br/&gt;ManagedCluster, Placement&lt;br/&gt;PlacementDecision&lt;br/&gt;ManifestWork, MWRS&lt;br/&gt;ManagedClusterAddOn&lt;br/&gt;Policy, CSR&quot;]
+    end
+
+    L -- &quot;OCM work agents&lt;br/&gt;klusterlet pull model&quot; --&gt; M
+
+    subgraph SPOKES[&quot;MANAGED CLUSTERS - spokes&quot;]
+        M[&quot;klusterlet applies the&lt;br/&gt;embedded manifests&lt;br/&gt;status feeds back into&lt;br/&gt;ManifestWork status&lt;br/&gt;Applied / Available&quot;]
+        N[&quot;ocm-mcp-reader SA&lt;br/&gt;read-only RBAC for&lt;br/&gt;health, events, pod logs&lt;br/&gt;production: cluster-proxy&quot;]
+    end
+    H -- &quot;HTTPS bounded reads&lt;br/&gt;limit 500, timeout 5/30 s&quot; --&gt; N
+</code></pre></div>
+<h3 id="2-anatomy-of-one-read-call---list_clusters">2. Anatomy of one read call - <code>list_clusters</code> <a class="header-anchor" href="#2-anatomy-of-one-read-call---list_clusters">#</a></h3>
+<p>What actually happens, function by function, for the simplest tool:</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="sequenceDiagram
+    autonumber
+    participant AG as Agent (MCP client)
+    participant FM as FastMCP (server.py)
+    participant TR as traced_tool (tracing.py)
+    participant OC as ocm.py
+    participant K8 as k8s.py
+    participant API as hub kube-apiserver
+
+    AG-&gt;&gt;FM: JSON-RPC tools/call {name:&quot;list_clusters&quot;}
+    FM-&gt;&gt;FM: validate arguments against generated schema
+    FM-&gt;&gt;TR: list_clusters()
+    TR-&gt;&gt;TR: start OTel span &quot;tool.list_clusters&quot; (if OTLP endpoint set)
+    TR-&gt;&gt;OC: _read(ocm.list_managed_clusters)
+    OC-&gt;&gt;OC: paged_list(list_fn) - page loop
+    OC-&gt;&gt;K8: hub_custom() -&gt; cached ApiClient for OCM_MCP_HUB_CONTEXT&lt;br/&gt;(rebuilt if older than OCM_MCP_CLIENT_TTL=600s)
+    K8-&gt;&gt;API: GET /apis/cluster.open-cluster-management.io/v1/managedclusters?limit=500
+    API--&gt;&gt;K8: page 1 (+ metadata.continue if more)
+    K8-&gt;&gt;API: ...follow continue tokens until done or 5000 items (then explicit &quot;truncated&quot;)
+    API--&gt;&gt;OC: raw ManagedCluster list
+    OC-&gt;&gt;OC: summarize: name, labels, Available/Joined conditions,&lt;br/&gt;kubernetes version, cpu/memory capacity (nothing else)
+    OC--&gt;&gt;TR: list[dict]
+    TR-&gt;&gt;TR: classify_outcome -&gt; &quot;ok&quot;
+    TR-&gt;&gt;TR: audit append under flock: {tool,args,outcome,duration_ms,&lt;br/&gt;actor,ts,seq=N,prev=hash(N-1),hash=sha256(prev+canonical)} + fsync
+    TR-&gt;&gt;TR: metrics.record(&quot;list_clusters&quot;,&quot;ok&quot;,ms)
+    TR--&gt;&gt;FM: JSON string
+    FM--&gt;&gt;AG: JSON-RPC result (content: text)
+"></div><pre class="mermaid-src"><code>sequenceDiagram
+    autonumber
+    participant AG as Agent (MCP client)
+    participant FM as FastMCP (server.py)
+    participant TR as traced_tool (tracing.py)
+    participant OC as ocm.py
+    participant K8 as k8s.py
+    participant API as hub kube-apiserver
+
+    AG-&gt;&gt;FM: JSON-RPC tools/call {name:&quot;list_clusters&quot;}
+    FM-&gt;&gt;FM: validate arguments against generated schema
+    FM-&gt;&gt;TR: list_clusters()
+    TR-&gt;&gt;TR: start OTel span &quot;tool.list_clusters&quot; (if OTLP endpoint set)
+    TR-&gt;&gt;OC: _read(ocm.list_managed_clusters)
+    OC-&gt;&gt;OC: paged_list(list_fn) - page loop
+    OC-&gt;&gt;K8: hub_custom() -&gt; cached ApiClient for OCM_MCP_HUB_CONTEXT&lt;br/&gt;(rebuilt if older than OCM_MCP_CLIENT_TTL=600s)
+    K8-&gt;&gt;API: GET /apis/cluster.open-cluster-management.io/v1/managedclusters?limit=500
+    API--&gt;&gt;K8: page 1 (+ metadata.continue if more)
+    K8-&gt;&gt;API: ...follow continue tokens until done or 5000 items (then explicit &quot;truncated&quot;)
+    API--&gt;&gt;OC: raw ManagedCluster list
+    OC-&gt;&gt;OC: summarize: name, labels, Available/Joined conditions,&lt;br/&gt;kubernetes version, cpu/memory capacity (nothing else)
+    OC--&gt;&gt;TR: list[dict]
+    TR-&gt;&gt;TR: classify_outcome -&gt; &quot;ok&quot;
+    TR-&gt;&gt;TR: audit append under flock: {tool,args,outcome,duration_ms,&lt;br/&gt;actor,ts,seq=N,prev=hash(N-1),hash=sha256(prev+canonical)} + fsync
+    TR-&gt;&gt;TR: metrics.record(&quot;list_clusters&quot;,&quot;ok&quot;,ms)
+    TR--&gt;&gt;FM: JSON string
+    FM--&gt;&gt;AG: JSON-RPC result (content: text)
+</code></pre></div>
+<p>Spoke-touching reads (<code>get_cluster_health</code>, <code>query_events</code>, <code>get_pod_logs</code>) differ
+in one step: <code>k8s.spoke_core(cluster)</code> resolves the per-cluster read context and
+every list is bounded (<code>limit=OCM_MCP_HEALTH_LIMIT</code>, request timeout <code>(5, 30)</code>s),
+with an explicit note when the cluster has more than the limit.</p>
+<p><code>get_fleet_health</code> is <code>get_cluster_health</code> widened to the whole fleet in one call:
+one paged hub list for every cluster's conditions, then a bounded thread pool fans
+out the same per-cluster spoke scan concurrently instead of the agent looping the
+single-cluster tool once per member.</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    FH0[&quot;get_fleet_health call&quot;] --&gt; FH1[&quot;hub conditions:&lt;br/&gt;every cluster, one list&quot;]
+    FH0 --&gt; FH2[&quot;fan-out: bounded workers&lt;br/&gt;OCM_MCP_FANOUT_WORKERS&quot;]
+    FH2 --&gt; FH3[&quot;spoke scan: cluster 1&quot;]
+    FH2 --&gt; FH4[&quot;spoke scan: cluster 2&quot;]
+    FH2 --&gt; FH5[&quot;spoke scan: cluster N&lt;br/&gt;error entry, not a failure&quot;]
+    FH1 --&gt; FH6[&quot;merge + sort:&lt;br/&gt;unhealthy clusters first&quot;]
+    FH3 --&gt; FH6
+    FH4 --&gt; FH6
+    FH5 --&gt; FH6
+"></div><pre class="mermaid-src"><code>flowchart TD
+    FH0[&quot;get_fleet_health call&quot;] --&gt; FH1[&quot;hub conditions:&lt;br/&gt;every cluster, one list&quot;]
+    FH0 --&gt; FH2[&quot;fan-out: bounded workers&lt;br/&gt;OCM_MCP_FANOUT_WORKERS&quot;]
+    FH2 --&gt; FH3[&quot;spoke scan: cluster 1&quot;]
+    FH2 --&gt; FH4[&quot;spoke scan: cluster 2&quot;]
+    FH2 --&gt; FH5[&quot;spoke scan: cluster N&lt;br/&gt;error entry, not a failure&quot;]
+    FH1 --&gt; FH6[&quot;merge + sort:&lt;br/&gt;unhealthy clusters first&quot;]
+    FH3 --&gt; FH6
+    FH4 --&gt; FH6
+    FH5 --&gt; FH6
+</code></pre></div>
+<h3 id="3-the-gated-write-path---every-check-in-order">3. The gated write path - every check, in order <a class="header-anchor" href="#3-the-gated-write-path---every-check-in-order">#</a></h3>
+<p>Nothing in this sequence is advisory; each numbered gate refuses on its own.</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="sequenceDiagram
+    autonumber
+    participant AG as Agent
+    participant SV as server.py (write tools)
+    participant GR as guardrails.py
+    participant AP as approvals.py
+    participant ST as $OCM_MCP_HOME
+    participant HU as Human (ocm-mcp CLI)
+    participant API as hub apiserver (+ Kyverno)
+
+    Note over AG,API: PROPOSE - nothing is applied
+    AG-&gt;&gt;SV: propose_manifestwork(cluster, name, summary, manifests_json)
+    SV-&gt;&gt;SV: read-only backstop (OCM_MCP_READ_ONLY -&gt; refuse)
+    SV-&gt;&gt;SV: raw byte cap BEFORE parsing (256 KiB) - no JSON bomb
+    SV-&gt;&gt;GR: validate_manifests(manifests)
+    GR-&gt;&gt;GR: list + count cap (max 10 manifests)
+    GR-&gt;&gt;GR: per-manifest schema check first (malformed = clean violation, never a crash)
+    GR-&gt;&gt;GR: exact (apiVersion, kind) in ALLOWED_GVK - group spoofing blocked
+    GR-&gt;&gt;GR: namespace required + protected list + kube-*/openshift-*/ocm prefixes
+    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false
+    GR-&gt;&gt;GR: volume ALLOW-list (configMap/emptyDir/downwardAPI/projected),&lt;br/&gt;no projected serviceAccountToken/secret sources
+    GR-&gt;&gt;GR: no env secretKeyRef / envFrom secretRef (no path to Secret contents)
+    GR-&gt;&gt;GR: image pinned - no :latest, no tagless, @sha256 digest in strict mode
+    GR-&gt;&gt;GR: Service type ClusterIP only, no externalIPs - HPA maxReplicas capped at 100
+    GR--&gt;&gt;SV: ok, or GuardrailViolation with EVERY problem listed (agent self-corrects)
+    SV-&gt;&gt;API: create ManifestWork with dryRun=All (server-side)
+    API-&gt;&gt;API: Kyverno admission: 9 ClusterPolicies foreach embedded manifest (layer 2,&lt;br/&gt;independent re-check of the same invariants + org policies)
+    API--&gt;&gt;SV: admitted (dry-run) or denied with the policy&#x27;s own message
+    SV-&gt;&gt;ST: Proposal.save(): uuid4-hex id, content_hash = sha256(canonical&lt;br/&gt;cluster+name+manifests+kind+action+params), status=pending,&lt;br/&gt;atomic write + fsync + chmod 0600
+    SV--&gt;&gt;AG: proposal_id + &quot;ask a human to run ocm-mcp approve with this id&quot;
+
+    Note over HU,ST: APPROVE - happens OUTSIDE the agent&#x27;s reach
+    HU-&gt;&gt;ST: ocm-mcp show id - reviews the exact manifests
+    HU-&gt;&gt;AP: mint_token(proposal, operation=&quot;apply&quot;)
+    AP-&gt;&gt;AP: claims: jti (random), iss, aud, id, hash=content_hash,&lt;br/&gt;op, approver, iat/nbf/exp (TTL 3600 s)
+    AP-&gt;&gt;AP: Ed25519 sign with PRIVATE key (CLI side only)
+    HU--&gt;&gt;AG: token handed over out-of-band
+
+    Note over AG,API: APPLY - the token is proven, then burned
+    AG-&gt;&gt;SV: apply_manifestwork(proposal_id, approval_token)
+    SV-&gt;&gt;ST: proposal_lock(id) - flock serializes concurrent applies
+    SV-&gt;&gt;SV: _valid_id (32-hex only - path traversal blocked), load, status must be pending
+    SV-&gt;&gt;SV: TOCTOU defense: re-hash stored content, re-run ALL static guardrails NOW
+    SV-&gt;&gt;AP: verify_token(proposal, token, operation=&quot;apply&quot;)
+    AP-&gt;&gt;AP: signature valid under verifier .pub (or .pub.prev during planned rotation)?
+    AP-&gt;&gt;AP: iss/aud match? now within nbf..exp? claims.id == proposal.id?
+    AP-&gt;&gt;AP: claims.hash == re-computed content hash? claims.op == &quot;apply&quot;?&lt;br/&gt;(an apply token can NEVER authorize a rollback)
+    AP-&gt;&gt;ST: jti already in used_tokens.jsonl? -&gt; replay refused
+    AP-&gt;&gt;ST: consume: append jti (compact ledger at 2000 lines)
+    SV-&gt;&gt;API: create ManifestWork (real this time) with&lt;br/&gt;label app.kubernetes.io/managed-by=ocm-mcp-server
+    API--&gt;&gt;SV: created (Kyverno + RBAC enforce again, for real)
+    SV-&gt;&gt;ST: status pending -&gt; applied, record approver + work UID
+    SV--&gt;&gt;AG: applied (agent verifies via get_manifestwork status feedback)
+"></div><pre class="mermaid-src"><code>sequenceDiagram
+    autonumber
+    participant AG as Agent
+    participant SV as server.py (write tools)
+    participant GR as guardrails.py
+    participant AP as approvals.py
+    participant ST as $OCM_MCP_HOME
+    participant HU as Human (ocm-mcp CLI)
+    participant API as hub apiserver (+ Kyverno)
+
+    Note over AG,API: PROPOSE - nothing is applied
+    AG-&gt;&gt;SV: propose_manifestwork(cluster, name, summary, manifests_json)
+    SV-&gt;&gt;SV: read-only backstop (OCM_MCP_READ_ONLY -&gt; refuse)
+    SV-&gt;&gt;SV: raw byte cap BEFORE parsing (256 KiB) - no JSON bomb
+    SV-&gt;&gt;GR: validate_manifests(manifests)
+    GR-&gt;&gt;GR: list + count cap (max 10 manifests)
+    GR-&gt;&gt;GR: per-manifest schema check first (malformed = clean violation, never a crash)
+    GR-&gt;&gt;GR: exact (apiVersion, kind) in ALLOWED_GVK - group spoofing blocked
+    GR-&gt;&gt;GR: namespace required + protected list + kube-*/openshift-*/ocm prefixes
+    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false
+    GR-&gt;&gt;GR: volume ALLOW-list (configMap/emptyDir/downwardAPI/projected),&lt;br/&gt;no projected serviceAccountToken/secret sources
+    GR-&gt;&gt;GR: no env secretKeyRef / envFrom secretRef (no path to Secret contents)
+    GR-&gt;&gt;GR: image pinned - no :latest, no tagless, @sha256 digest in strict mode
+    GR-&gt;&gt;GR: Service type ClusterIP only, no externalIPs - HPA maxReplicas capped at 100
+    GR--&gt;&gt;SV: ok, or GuardrailViolation with EVERY problem listed (agent self-corrects)
+    SV-&gt;&gt;API: create ManifestWork with dryRun=All (server-side)
+    API-&gt;&gt;API: Kyverno admission: 9 ClusterPolicies foreach embedded manifest (layer 2,&lt;br/&gt;independent re-check of the same invariants + org policies)
+    API--&gt;&gt;SV: admitted (dry-run) or denied with the policy&#x27;s own message
+    SV-&gt;&gt;ST: Proposal.save(): uuid4-hex id, content_hash = sha256(canonical&lt;br/&gt;cluster+name+manifests+kind+action+params), status=pending,&lt;br/&gt;atomic write + fsync + chmod 0600
+    SV--&gt;&gt;AG: proposal_id + &quot;ask a human to run ocm-mcp approve with this id&quot;
+
+    Note over HU,ST: APPROVE - happens OUTSIDE the agent&#x27;s reach
+    HU-&gt;&gt;ST: ocm-mcp show id - reviews the exact manifests
+    HU-&gt;&gt;AP: mint_token(proposal, operation=&quot;apply&quot;)
+    AP-&gt;&gt;AP: claims: jti (random), iss, aud, id, hash=content_hash,&lt;br/&gt;op, approver, iat/nbf/exp (TTL 3600 s)
+    AP-&gt;&gt;AP: Ed25519 sign with PRIVATE key (CLI side only)
+    HU--&gt;&gt;AG: token handed over out-of-band
+
+    Note over AG,API: APPLY - the token is proven, then burned
+    AG-&gt;&gt;SV: apply_manifestwork(proposal_id, approval_token)
+    SV-&gt;&gt;ST: proposal_lock(id) - flock serializes concurrent applies
+    SV-&gt;&gt;SV: _valid_id (32-hex only - path traversal blocked), load, status must be pending
+    SV-&gt;&gt;SV: TOCTOU defense: re-hash stored content, re-run ALL static guardrails NOW
+    SV-&gt;&gt;AP: verify_token(proposal, token, operation=&quot;apply&quot;)
+    AP-&gt;&gt;AP: signature valid under verifier .pub (or .pub.prev during planned rotation)?
+    AP-&gt;&gt;AP: iss/aud match? now within nbf..exp? claims.id == proposal.id?
+    AP-&gt;&gt;AP: claims.hash == re-computed content hash? claims.op == &quot;apply&quot;?&lt;br/&gt;(an apply token can NEVER authorize a rollback)
+    AP-&gt;&gt;ST: jti already in used_tokens.jsonl? -&gt; replay refused
+    AP-&gt;&gt;ST: consume: append jti (compact ledger at 2000 lines)
+    SV-&gt;&gt;API: create ManifestWork (real this time) with&lt;br/&gt;label app.kubernetes.io/managed-by=ocm-mcp-server
+    API--&gt;&gt;SV: created (Kyverno + RBAC enforce again, for real)
+    SV-&gt;&gt;ST: status pending -&gt; applied, record approver + work UID
+    SV--&gt;&gt;AG: applied (agent verifies via get_manifestwork status feedback)
+</code></pre></div>
+<h3 id="4-rollback-and-lifecycle-actions---the-same-gate-different-verbs">4. Rollback and lifecycle actions - the same gate, different verbs <a class="header-anchor" href="#4-rollback-and-lifecycle-actions---the-same-gate-different-verbs">#</a></h3>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    R0[&quot;propose_rollback&lt;br/&gt;applied proposal id&quot;] --&gt; R1[&quot;loads the APPLIED proposal&lt;br/&gt;creates a DISTINCT&lt;br/&gt;rollback proposal binding&lt;br/&gt;target work name,&lt;br/&gt;current UID, origin id&quot;]
+    R1 --&gt; R2[&quot;human approves it&lt;br/&gt;separately: token&lt;br/&gt;claims op=rollback&quot;]
+    R2 --&gt; R3[&quot;rollback_manifestwork&lt;br/&gt;rollback id + token&quot;]
+    R3 --&gt; R4{&quot;ownership checks&lt;br/&gt;BEFORE the token&lt;br/&gt;is burned&quot;}
+    R4 -- &quot;managed-by&lt;br/&gt;label missing&quot; --&gt; RX[&quot;REJECTED&lt;br/&gt;never deletes a work&lt;br/&gt;it did not create&quot;]
+    R4 -- &quot;UID changed&lt;br/&gt;since approval&quot; --&gt; RX2[&quot;REJECTED&lt;br/&gt;work was re-created,&lt;br/&gt;re-propose&quot;]
+    R4 -- ok --&gt; R5[&quot;verify + consume&lt;br/&gt;rollback-scoped token&lt;br/&gt;DELETE ManifestWork&lt;br/&gt;rollback prop: applied&lt;br/&gt;origin prop: rolled_back&quot;]
+
+    C0[&quot;propose_cluster_action&lt;br/&gt;cluster, action, params&quot;] --&gt; C1[&quot;action allow-list:&lt;br/&gt;cordon, uncordon,&lt;br/&gt;set_label, accept,&lt;br/&gt;enable / disable addon&lt;br/&gt;nothing else proposable&quot;]
+    C1 --&gt; C2[&quot;server-side dry-run of&lt;br/&gt;the exact patch/create&lt;br/&gt;at PROPOSE time&quot;]
+    C2 --&gt; C3[&quot;same store, same&lt;br/&gt;human token,&lt;br/&gt;apply_cluster_action&quot;]
+    C3 --&gt; C4[&quot;patch actions merge-patch&lt;br/&gt;the ManagedCluster&lt;br/&gt;accept approves ONLY the&lt;br/&gt;captured CSRs: name, uid,&lt;br/&gt;request-hash, CN verified&lt;br/&gt;addon actions create or&lt;br/&gt;delete ManagedClusterAddOn&quot;]
+"></div><pre class="mermaid-src"><code>flowchart TD
+    R0[&quot;propose_rollback&lt;br/&gt;applied proposal id&quot;] --&gt; R1[&quot;loads the APPLIED proposal&lt;br/&gt;creates a DISTINCT&lt;br/&gt;rollback proposal binding&lt;br/&gt;target work name,&lt;br/&gt;current UID, origin id&quot;]
+    R1 --&gt; R2[&quot;human approves it&lt;br/&gt;separately: token&lt;br/&gt;claims op=rollback&quot;]
+    R2 --&gt; R3[&quot;rollback_manifestwork&lt;br/&gt;rollback id + token&quot;]
+    R3 --&gt; R4{&quot;ownership checks&lt;br/&gt;BEFORE the token&lt;br/&gt;is burned&quot;}
+    R4 -- &quot;managed-by&lt;br/&gt;label missing&quot; --&gt; RX[&quot;REJECTED&lt;br/&gt;never deletes a work&lt;br/&gt;it did not create&quot;]
+    R4 -- &quot;UID changed&lt;br/&gt;since approval&quot; --&gt; RX2[&quot;REJECTED&lt;br/&gt;work was re-created,&lt;br/&gt;re-propose&quot;]
+    R4 -- ok --&gt; R5[&quot;verify + consume&lt;br/&gt;rollback-scoped token&lt;br/&gt;DELETE ManifestWork&lt;br/&gt;rollback prop: applied&lt;br/&gt;origin prop: rolled_back&quot;]
+
+    C0[&quot;propose_cluster_action&lt;br/&gt;cluster, action, params&quot;] --&gt; C1[&quot;action allow-list:&lt;br/&gt;cordon, uncordon,&lt;br/&gt;set_label, accept,&lt;br/&gt;enable / disable addon&lt;br/&gt;nothing else proposable&quot;]
+    C1 --&gt; C2[&quot;server-side dry-run of&lt;br/&gt;the exact patch/create&lt;br/&gt;at PROPOSE time&quot;]
+    C2 --&gt; C3[&quot;same store, same&lt;br/&gt;human token,&lt;br/&gt;apply_cluster_action&quot;]
+    C3 --&gt; C4[&quot;patch actions merge-patch&lt;br/&gt;the ManagedCluster&lt;br/&gt;accept approves ONLY the&lt;br/&gt;captured CSRs: name, uid,&lt;br/&gt;request-hash, CN verified&lt;br/&gt;addon actions create or&lt;br/&gt;delete ManagedClusterAddOn&quot;]
+</code></pre></div>
+<h3 id="5-integrity-machinery---audit-chain-anchors-keys-state">5. Integrity machinery - audit chain, anchors, keys, state <a class="header-anchor" href="#5-integrity-machinery---audit-chain-anchors-keys-state">#</a></h3>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    subgraph AUD[&quot;audit.jsonl - hash chain&quot;]
+        A1[&quot;entry N-1&lt;br/&gt;hash H1&quot;] --&gt; A2[&quot;entry N&lt;br/&gt;prev = H1&lt;br/&gt;hash H2 = sha256 of&lt;br/&gt;H1 + canonical entry&quot;]
+        A2 --&gt; A3[&quot;entry N+1&lt;br/&gt;prev = H2 ...&quot;]
+    end
+    A3 --&gt; V1[&quot;verify_audit_chain&lt;br/&gt;ocm-mcp audit-verify&lt;br/&gt;recomputes every hash&lt;br/&gt;catches edit, reorder,&lt;br/&gt;mid-log deletion&quot;]
+    V1 --&gt; V2[&quot;blind spot of a bare chain:&lt;br/&gt;tail truncation,&lt;br/&gt;full rewrite&quot;]
+    V2 --&gt; V3[&quot;closed by ANCHORS&lt;br/&gt;ocm-mcp audit-anchor&lt;br/&gt;trusted terminal signs&lt;br/&gt;seq + hash + timestamp&lt;br/&gt;with the PRIVATE key&quot;]
+    V3 --&gt; V4[&quot;audit-verify also fails&lt;br/&gt;unless the log still&lt;br/&gt;EXTENDS every anchored&lt;br/&gt;head - verifier key only&quot;]
+
+    subgraph KEYS[&quot;key custody&quot;]
+        K1[&quot;PRIVATE approval key&lt;br/&gt;CLI, trusted terminal,&lt;br/&gt;or KMS&lt;br/&gt;signs tokens + anchors&quot;]
+        K2[&quot;PUBLIC verifier key&lt;br/&gt;plus .pub.prev in rotation&lt;br/&gt;server side, verify only&lt;br/&gt;compromised server&lt;br/&gt;cannot mint&quot;]
+    end
+
+    subgraph FILES[&quot;OCM_MCP_HOME on disk&quot;]
+        F1[&quot;proposals/*.json&lt;br/&gt;0600, fsync,&lt;br/&gt;forward-only status&quot;]
+        F2[&quot;audit.jsonl +&lt;br/&gt;audit_anchors.jsonl&lt;br/&gt;0600, flock&quot;]
+        F3[&quot;used_tokens.jsonl&lt;br/&gt;replay ledger&quot;]
+    end
+"></div><pre class="mermaid-src"><code>flowchart TD
+    subgraph AUD[&quot;audit.jsonl - hash chain&quot;]
+        A1[&quot;entry N-1&lt;br/&gt;hash H1&quot;] --&gt; A2[&quot;entry N&lt;br/&gt;prev = H1&lt;br/&gt;hash H2 = sha256 of&lt;br/&gt;H1 + canonical entry&quot;]
+        A2 --&gt; A3[&quot;entry N+1&lt;br/&gt;prev = H2 ...&quot;]
+    end
+    A3 --&gt; V1[&quot;verify_audit_chain&lt;br/&gt;ocm-mcp audit-verify&lt;br/&gt;recomputes every hash&lt;br/&gt;catches edit, reorder,&lt;br/&gt;mid-log deletion&quot;]
+    V1 --&gt; V2[&quot;blind spot of a bare chain:&lt;br/&gt;tail truncation,&lt;br/&gt;full rewrite&quot;]
+    V2 --&gt; V3[&quot;closed by ANCHORS&lt;br/&gt;ocm-mcp audit-anchor&lt;br/&gt;trusted terminal signs&lt;br/&gt;seq + hash + timestamp&lt;br/&gt;with the PRIVATE key&quot;]
+    V3 --&gt; V4[&quot;audit-verify also fails&lt;br/&gt;unless the log still&lt;br/&gt;EXTENDS every anchored&lt;br/&gt;head - verifier key only&quot;]
+
+    subgraph KEYS[&quot;key custody&quot;]
+        K1[&quot;PRIVATE approval key&lt;br/&gt;CLI, trusted terminal,&lt;br/&gt;or KMS&lt;br/&gt;signs tokens + anchors&quot;]
+        K2[&quot;PUBLIC verifier key&lt;br/&gt;plus .pub.prev in rotation&lt;br/&gt;server side, verify only&lt;br/&gt;compromised server&lt;br/&gt;cannot mint&quot;]
+    end
+
+    subgraph FILES[&quot;OCM_MCP_HOME on disk&quot;]
+        F1[&quot;proposals/*.json&lt;br/&gt;0600, fsync,&lt;br/&gt;forward-only status&quot;]
+        F2[&quot;audit.jsonl +&lt;br/&gt;audit_anchors.jsonl&lt;br/&gt;0600, flock&quot;]
+        F3[&quot;used_tokens.jsonl&lt;br/&gt;replay ledger&quot;]
+    end
+</code></pre></div>
+<h3 id="6-observability---three-independent-signals-per-tool-call">6. Observability - three independent signals per tool call <a class="header-anchor" href="#6-observability---three-independent-signals-per-tool-call">#</a></h3>
+<p>Every tool call passes through the <code>traced_tool</code> decorator (<code>tracing.py</code>), which
+emits up to three records with different jobs and different trust properties:</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    TC[&quot;one tool call&lt;br/&gt;traced_tool decorator&lt;br/&gt;tracing.py&quot;]
+
+    TC --&gt; AUD[&quot;AUDIT LINE - always on&lt;br/&gt;the tamper-evident record&lt;br/&gt;tool, args, outcome,&lt;br/&gt;duration, actor, seq,&lt;br/&gt;prev, hash - flock + fsync&quot;]
+    AUD --&gt; AUD2[&quot;audit.jsonl hash chain&lt;br/&gt;+ signed anchors&lt;br/&gt;answers: WHAT happened,&lt;br/&gt;in what order,&lt;br/&gt;on whose authority&quot;]
+
+    TC --&gt; SPAN[&quot;OTEL SPAN - opt-in&lt;br/&gt;span name: tool.name&lt;br/&gt;attributes: arg.* truncated&lt;br/&gt;to 200 chars&lt;br/&gt;approval_token NEVER attached&quot;]
+    SPAN --&gt; EXP[&quot;BatchSpanProcessor&lt;br/&gt;OTLP/HTTP exporter&lt;br/&gt;POST /v1/traces&quot;]
+    EXP --&gt; BE[&quot;Jaeger all-in-one :4318&lt;br/&gt;or any OTel collector&lt;br/&gt;Tempo, vendor backend&lt;br/&gt;UI: Jaeger :16686&lt;br/&gt;service: ocm-mcp-server&lt;br/&gt;answers: WHERE time went&quot;]
+
+    TC --&gt; MET[&quot;METRICS - opt-in&lt;br/&gt;metrics.py, stdlib only&lt;br/&gt;counters by tool + outcome&lt;br/&gt;+ duration sums&quot;]
+    MET --&gt; PROM[&quot;GET /metrics&lt;br/&gt;Prometheus format&lt;br/&gt;binds 127.0.0.1 unless&lt;br/&gt;OCM_MCP_METRICS_HOST set&lt;br/&gt;answers: HOW OFTEN and&lt;br/&gt;HOW SLOW, for alerting&quot;]
+"></div><pre class="mermaid-src"><code>flowchart TD
+    TC[&quot;one tool call&lt;br/&gt;traced_tool decorator&lt;br/&gt;tracing.py&quot;]
+
+    TC --&gt; AUD[&quot;AUDIT LINE - always on&lt;br/&gt;the tamper-evident record&lt;br/&gt;tool, args, outcome,&lt;br/&gt;duration, actor, seq,&lt;br/&gt;prev, hash - flock + fsync&quot;]
+    AUD --&gt; AUD2[&quot;audit.jsonl hash chain&lt;br/&gt;+ signed anchors&lt;br/&gt;answers: WHAT happened,&lt;br/&gt;in what order,&lt;br/&gt;on whose authority&quot;]
+
+    TC --&gt; SPAN[&quot;OTEL SPAN - opt-in&lt;br/&gt;span name: tool.name&lt;br/&gt;attributes: arg.* truncated&lt;br/&gt;to 200 chars&lt;br/&gt;approval_token NEVER attached&quot;]
+    SPAN --&gt; EXP[&quot;BatchSpanProcessor&lt;br/&gt;OTLP/HTTP exporter&lt;br/&gt;POST /v1/traces&quot;]
+    EXP --&gt; BE[&quot;Jaeger all-in-one :4318&lt;br/&gt;or any OTel collector&lt;br/&gt;Tempo, vendor backend&lt;br/&gt;UI: Jaeger :16686&lt;br/&gt;service: ocm-mcp-server&lt;br/&gt;answers: WHERE time went&quot;]
+
+    TC --&gt; MET[&quot;METRICS - opt-in&lt;br/&gt;metrics.py, stdlib only&lt;br/&gt;counters by tool + outcome&lt;br/&gt;+ duration sums&quot;]
+    MET --&gt; PROM[&quot;GET /metrics&lt;br/&gt;Prometheus format&lt;br/&gt;binds 127.0.0.1 unless&lt;br/&gt;OCM_MCP_METRICS_HOST set&lt;br/&gt;answers: HOW OFTEN and&lt;br/&gt;HOW SLOW, for alerting&quot;]
+</code></pre></div>
+<p>Why three signals instead of one: the <strong>audit log</strong> is a safety artifact - append-only,
+hash-chained, anchor-signed, and always on; incident reports and the eval harness are
+built from it. The <strong>OTel span</strong> is a debugging artifact - it shows call structure and
+latency in Jaeger but is deliberately not trusted for anything safety-related, so it
+can be disabled (and is fail-soft: without the <code>[tracing]</code> extra installed and
+<code>OTEL_EXPORTER_OTLP_ENDPOINT</code> set, the span layer is a no-op and tools behave
+identically). <strong>Metrics</strong> are an alerting artifact - aggregate counters with no
+per-call payload at all.</p>
+<p>Enable tracing with two switches (full guide:
+<a href="/reference/deployment/#tracing-with-opentelemetry-and-jaeger">deployment.md</a>):</p>
+<pre><code class="language-bash">pip install &quot;ocm-mcp-server[tracing]&quot;
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318   # e.g. Jaeger all-in-one
+</code></pre>
+<p>Tested at three levels: unit tests cover span creation, redaction, and the no-op
+paths; the e2e suite's tracing-export step points a fresh server process at a local
+OTLP sink and asserts a real trace batch arrives naming the <code>tool.*</code> span and the
+<code>ocm-mcp-server</code> service; and <code>make bootstrap</code> starts a real Jaeger container
+(<code>--no-jaeger</code> to skip) so every local-fleet tool call is browsable at
+<code>http://localhost:16686</code>.</p>
+<h3 id="7-where-each-guarantee-is-enforced-quick-index">7. Where each guarantee is enforced (quick index) <a class="header-anchor" href="#7-where-each-guarantee-is-enforced-quick-index">#</a></h3>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Guarantee</th>
+<th>Enforced in</th>
+<th>Independent backstop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Only 8 exact GVKs enter a proposal</td>
+<td><code>guardrails.py</code> <code>ALLOWED_GVK</code></td>
+<td>Kyverno <code>restrict-manifestwork-gvk</code></td>
+</tr>
+<tr>
+<td>No system/platform namespaces</td>
+<td><code>guardrails.py</code> prefixes</td>
+<td>Kyverno <code>protect-system-namespaces</code> (wildcards)</td>
+</tr>
+<tr>
+<td>Restricted Pod Security incl. init/ephemeral, no uid 0</td>
+<td><code>guardrails._check_pod_security</code></td>
+<td>Kyverno <code>restrict-manifestwork-pod-security</code></td>
+</tr>
+<tr>
+<td>No path to Secret contents (env/volume/projected)</td>
+<td><code>guardrails.py</code></td>
+<td>Kyverno <code>disallow-manifestwork-secret-access</code></td>
+</tr>
+<tr>
+<td>ClusterIP-only Services, HPA ceiling</td>
+<td><code>guardrails.py</code></td>
+<td>Kyverno <code>restrict-manifestwork-service-hpa</code></td>
+</tr>
+<tr>
+<td>Pinned images, kind allow-list</td>
+<td><code>guardrails.py</code></td>
+<td>Kyverno <code>restrict-manifestwork-kinds</code></td>
+</tr>
+<tr>
+<td>&lt;= 10 manifests, &lt;= 256 KiB</td>
+<td><code>guardrails.py</code> / <code>server.py</code></td>
+<td>Kyverno <code>limit-manifestwork-manifests</code></td>
+</tr>
+<tr>
+<td>Change needs a human</td>
+<td><code>approvals.verify_token</code> (sig, hash, op, jti, TTL)</td>
+<td>RBAC: server cannot escalate</td>
+</tr>
+<tr>
+<td>Approval binds exact content</td>
+<td>content hash in claims + TOCTOU re-hash at apply</td>
+<td>signature breaks on any mutation</td>
+</tr>
+<tr>
+<td>Every call on the record</td>
+<td><code>traced_tool</code> hash chain</td>
+<td>signed anchors catch truncation</td>
+</tr>
+<tr>
+<td>The two layers agree</td>
+<td><code>hack/parity_contract.py</code> in CI</td>
+<td>39-case offline <code>kyverno test</code></td>
+</tr>
+</tbody>
+</table></div><p>The parity between the left and middle columns is not aspirational: CI runs the same
+fixture corpus through both layers and fails on any verdict mismatch.</p>
+<h2 id="design-decisions-worth-arguing-about">Design decisions worth arguing about <a class="header-anchor" href="#design-decisions-worth-arguing-about">#</a></h2>
+<p><strong>Why validate ManifestWorks, not Pods?</strong> Policies on the managed clusters see
+resources only after delivery. Validating the <em>envelope</em> on the hub rejects bad
+content before it ever leaves - at proposal time, via server-side dry-run, so
+the agent gets the policy message as feedback and can self-correct.</p>
+<p><strong>Why an Ed25519-signed token instead of a &quot;yes&quot; in chat?</strong> A chat approval
+approves a <em>conversation</em>. The token approves a <em>content hash</em> and an operation:
+if the agent mutates the proposal after approval, the signature no longer
+verifies, and an <code>apply</code> token cannot authorize a <code>rollback</code>. Approval is
+asymmetric - the CLI signs with a private key the server never holds, so a
+compromised server cannot mint one - provided the private signing key is kept off the
+server (<code>OCM_MCP_SIGNER_KEY</code> on a separate account/device); co-located, that is a
+filesystem convention, not a boundary. Tokens are single-use and expire (default 1 h), minted
+only by the CLI on a trusted terminal.</p>
+<p><strong>Why per-spoke read ServiceAccounts in the quickstart?</strong> Simplicity. The
+production-correct path is the OCM cluster-proxy add-on (hub-mediated access,
+no direct spoke credentials on the server host); the tool surface is identical,
+so swapping the transport does not change the agent's world.</p>
+<p><strong>Why no Secrets/exec tools at all?</strong> Any tool that exists will eventually be
+called. Capabilities that are absent cannot be prompt-injected into use.</p>
+<h2 id="scaling-the-pattern">Scaling the pattern <a class="header-anchor" href="#scaling-the-pattern">#</a></h2>
+<ul>
+<li>More clusters: nothing changes - the hub is the fan-out point.</li>
+<li>More agents: one server per agent identity, each with its own RBAC and audit.</li>
+<li>Other hubs: the guardrail pattern (static → policy dry-run → human token →
+RBAC) ports to any declarative delivery API, not just OCM.</li>
+</ul>
+
+
+    <nav class="pager"><a class="next" href="/reference/guardrails/"><span class="pager__dir">Next</span><span class="pager__t">Guardrails</span></a></nav>
+
+    <p class="editlink">
+      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/architecture.md">docs/architecture.md</a>
+      — this page is generated from it, so edit the markdown, not the site.
+    </p>
+  </article>
+
+  <nav class="toc" aria-label="On this page">
+    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#the-choke-point-idea">The choke-point idea</a></li><li class="lvl-2"><a href="#components">Components</a></li><li class="lvl-2"><a href="#low-level-design---the-full-internals-vertically">Low-level design - the full internals, vertically</a></li><li class="lvl-3"><a href="#1-the-full-vertical-stack">1. The full vertical stack</a></li><li class="lvl-3"><a href="#2-anatomy-of-one-read-call---list_clusters">2. Anatomy of one read call - `list_clusters`</a></li><li class="lvl-3"><a href="#3-the-gated-write-path---every-check-in-order">3. The gated write path - every check, in order</a></li><li class="lvl-3"><a href="#4-rollback-and-lifecycle-actions---the-same-gate-different-verbs">4. Rollback and lifecycle actions - the same gate, different verbs</a></li><li class="lvl-3"><a href="#5-integrity-machinery---audit-chain-anchors-keys-state">5. Integrity machinery - audit chain, anchors, keys, state</a></li><li class="lvl-3"><a href="#6-observability---three-independent-signals-per-tool-call">6. Observability - three independent signals per tool call</a></li><li class="lvl-3"><a href="#7-where-each-guarantee-is-enforced-quick-index">7. Where each guarantee is enforced (quick index)</a></li><li class="lvl-2"><a href="#design-decisions-worth-arguing-about">Design decisions worth arguing about</a></li><li class="lvl-2"><a href="#scaling-the-pattern">Scaling the pattern</a></li></ul>
+  </nav>
+</main>
+
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <span>Built and maintained by <a href="https://www.linkedin.com/in/sandeepbazar/">Sandeep Bazar</a> · Apache-2.0 · generated from the repository's own markdown</span>
+    <nav>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server">Code</a>
+      <a href="https://pypi.org/p/ocm-mcp-server">PyPI</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/wiki">Wiki</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/static/site.js?v=b72157bb91" defer></script>
+</body>
+</html>

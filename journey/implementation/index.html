@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en" data-base="/">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Implementation · ocm-mcp-server</title>
+<meta name="description" content="What is actually in the code, so you can read it with a map in hand.">
+<meta property="og:title" content="4. Implementation · ocm-mcp-server">
+<meta property="og:description" content="What is actually in the code, so you can read it with a map in hand.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ocm-mcp-server">
+<meta property="og:url" content="https://ocm-mcp-server.github.io/journey/implementation/">
+<!-- PNG, not the SVG banner: LinkedIn, X, Slack and Facebook all reject SVG
+     for og:image and render no preview at all. Exported at 2400x1260 -
+     the 1.91:1 ratio they crop cleanly, at 2x so it stays sharp on HiDPI
+     displays and when downscaled into a feed. Source: web/og-card.html. -->
+<meta property="og:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="4. Implementation · ocm-mcp-server">
+<meta name="twitter:description" content="What is actually in the code, so you can read it with a map in hand.">
+<meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
+<link rel="canonical" href="https://ocm-mcp-server.github.io/journey/implementation/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
+<link rel="stylesheet" href="/static/site.css?v=e77b03863f">
+<script>
+  // Dark is the default for everyone, regardless of OS preference — this is a
+  // dark-first design and it is what the project should lead with. A visitor
+  // who picks light with the toggle keeps it; nothing else overrides them.
+  // Applied before first paint so there is no flash of the wrong theme.
+  (() => {
+    let t;
+    try { t = localStorage.getItem("theme"); } catch { t = null; }
+    document.documentElement.dataset.theme = t === "light" ? "light" : "dark";
+    // Motion: only an explicit choice is stamped here. With no attribute the
+    // stylesheet falls through to the OS preference, which is the default.
+    let m;
+    try { m = localStorage.getItem("motion"); } catch { m = null; }
+    if (m === "full" || m === "reduced") document.documentElement.dataset.motion = m;
+
+    // Tell the stylesheet JavaScript is running, which is what allows it to
+    // hide content for the reveal animation. Written in ES5 on purpose: if a
+    // browser cannot parse site.js, it must still parse this.
+    var root = document.documentElement;
+    root.className += " js";
+    // Safety net. If site.js never runs - blocked, offline, a parse error on an
+    // older engine - nothing would ever add the .in class and the page would
+    // stay blank. site.js clears this the moment it starts.
+    window.__revealSafety = setTimeout(function () {
+      root.className += " reveal-all";
+    }, 2000);
+  })();
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="hdr">
+  <!-- This site is a section of sandeepbazar.github.io. The chip is the way up
+       to that parent; the brand beside it stays this project. -->
+  <a class="hdr__home" href="https://sandeepbazar.github.io/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    Sandeep Bazar
+  </a>
+  <a class="hdr__brand" href="/">
+    <svg class="hdr__mark" viewBox="0 0 32 32" aria-hidden="true">
+      <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6f6cf6"/><stop offset="1" stop-color="#38bdf8"/>
+      </linearGradient></defs>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="url(#hg)" opacity=".22"/>
+      <path d="M16 2.5 4.5 7v9.2c0 7.1 4.8 11.8 11.5 13.9 6.7-2.1 11.5-6.8 11.5-13.9V7z" fill="none" stroke="url(#hg)" stroke-width="1.8"/>
+      <path d="m10.8 16.2 3.6 3.7 7-7.4" fill="none" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    ocm-mcp-server
+  </a>
+  <nav class="hdr__nav"><div class="menu"><a class="menu__t" href="/journey/why-this-exists/" aria-current="true">Start here<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Why it exists, how it works, and what it refuses to automate</p><div class="menu__grid"><a href="/journey/why-this-exists/"><span class="menu__n">01</span><span><span class="menu__l">Why this exists</span><span class="menu__d">Every platform team running Kubernetes at scale eventually hears it from l</span></span></a><a href="/journey/the-idea/"><span class="menu__n">02</span><span><span class="menu__l">The idea</span><span class="menu__d">Fleets already have a place where multi-cluster actions are observed and c</span></span></a><a href="/journey/how-it-works/"><span class="menu__n">03</span><span><span class="menu__l">How it works</span><span class="menu__d">The agent talks only to the server. The server holds the kubeconfig, appli</span></span></a><a href="/journey/implementation/"><span class="menu__n">04</span><span><span class="menu__l">Implementation</span><span class="menu__d">What is actually in the code, so you can read it with a map in hand.</span></span></a><a href="/journey/tools-and-prompts/"><span class="menu__n">05</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">35 tools across ten toolsets, plus ten prompts. Almost all of it is read: </span></span></a><a href="/journey/guardrails-deep-dive/"><span class="menu__n">06</span><span><span class="menu__l">Guardrails deep dive</span><span class="menu__d">Four independent layers stand between the model and your clusters. A chang</span></span></a><a href="/journey/getting-started/"><span class="menu__n">07</span><span><span class="menu__l">Getting started</span><span class="menu__d">Three paths, from &quot;try it on a laptop&quot; to &quot;run it against production.&quot; Ful</span></span></a><a href="/journey/use-cases-and-impact/"><span class="menu__n">08</span><span><span class="menu__l">Use cases and impact</span><span class="menu__d">This is not &quot;AI replaces your on-call.&quot; It is &quot;AI does the first fifteen m</span></span></a><a href="/journey/evaluation/"><span class="menu__n">09</span><span><span class="menu__l">Evaluation</span><span class="menu__d">Claims about agent safety are cheap. This project ships a harness that pro</span></span></a><a href="/journey/roadmap/"><span class="menu__n">10</span><span><span class="menu__l">What&#x27;s next</span><span class="menu__d">The pattern is complete and runnable today. These are the directions that </span></span></a><a href="/journey/contributing/"><span class="menu__n">11</span><span><span class="menu__l">Contributing</span><span class="menu__d">Help is welcome, and the project is deliberately structured so that contri</span></span></a><a href="/journey/faq/"><span class="menu__n">12</span><span><span class="menu__l">FAQ</span><span class="menu__d">Open Cluster Management (open-cluster-management.io), the CNCF multi-clust</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/reference/architecture/">Run it<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Architecture, deployment paths, the tool surface, the threat model</p><div class="menu__grid"><a href="/reference/architecture/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Architecture</span><span class="menu__d">Fleet operations already flow through a hub: Open Cluster Management gives</span></span></a><a href="/reference/guardrails/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Guardrails</span><span class="menu__d">Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are</span></span></a><a href="/reference/deployment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Deployment</span><span class="menu__d">Three paths, in increasing order of seriousness: a laptop fleet for trying</span></span></a><a href="/reference/tools/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">The server exposes 35 tools across ten toolsets plus ten prompts. This pag</span></span></a><a href="/reference/examples/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Worked examples</span><span class="menu__d">Real end-to-end flows. Commands are exact; agent turns are lightly condens</span></span></a><a href="/reference/kubeconfig-contexts/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Kubeconfig contexts</span><span class="menu__d">This server is configured with kubeconfig context names, like kind-hub or </span></span></a><a href="/reference/benchmarks/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Benchmarks</span><span class="menu__d">Two questions this answers: does the hub-side paged list (ocm.pagedlist) s</span></span></a><a href="/reference/security-self-assessment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Security self-assessment</span><span class="menu__d">This self-assessment follows the structure used by the CNCF TAG-Security s</span></span></a><a href="/reference/cncf-sandbox-readiness/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">CNCF readiness</span><span class="menu__d">This document is a self-check of how ocm-mcp-server measures up against th</span></span></a><a href="/reference/demo-script/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Demo script</span><span class="menu__d">Preparation: make bootstrap done, server registered in the MCP client, Jae</span></span></a><a href="/reference/upstream-notes/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Upstream notes</span><span class="menu__d">Draft issue texts, ready to file against the respective projects. Once fil</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/results/test-results/">Proof<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel"><p class="menu__blurb">A real fleet run, multi-model evaluation, coverage</p><div class="menu__grid"><a href="/results/test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">End-to-end fleet run</span><span class="menu__d">Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-07-29 01:34:45 &amp;nbsp;·&amp;n</span></span></a><a href="/results/unit-test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Unit tests and coverage</span><span class="menu__d">Verdict: 🟢 ALL PASSING &amp;nbsp;·&amp;nbsp; generated 2026-07-29 02:25:13 UTC &amp;nb</span></span></a></div></div></div></nav>
+  <div class="hdr__spacer"></div>
+  <button class="iconbtn" id="theme" type="button" aria-label="Toggle colour theme">
+    <svg class="theme-light-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>
+    </svg>
+    <svg class="theme-dark-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/>
+    </svg>
+  </button>
+  <button class="iconbtn" id="motion" type="button" aria-pressed="true" aria-label="Turn animations off">
+    <svg class="motion-on-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h3l3-8 4 16 3-8h7"/>
+    </svg>
+    <svg class="motion-off-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M2 12h20"/><path d="m4 4 16 16"/>
+    </svg>
+  </button>
+  <a class="ghlink" href="https://github.com/ocm-mcp-server/ocm-mcp-server">
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+    GitHub
+  </a>
+</header>
+
+<main class="doc" id="main">
+  <button class="side__toggle" type="button" aria-expanded="false" aria-controls="sidenav">
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Start here
+  </button>
+
+  <aside class="side" id="sidenav">
+    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/" aria-current="page"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
+  </aside>
+
+  <article class="prose">
+    <h1>4. Implementation</h1>
+
+<p>What is actually in the code, so you can read it with a map in hand.</p>
+<h2 id="module-map">Module map <a class="header-anchor" href="#module-map">#</a></h2>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
+    server[server.py&lt;br/&gt;MCP tools] --&gt; guard[guardrails.py&lt;br/&gt;static checks]
+    server --&gt; ocm[ocm.py&lt;br/&gt;hub + spoke ops]
+    server --&gt; appr[approvals.py&lt;br/&gt;proposals + tokens]
+    server --&gt; trace[tracing.py&lt;br/&gt;spans + audit]
+    ocm --&gt; k8s[k8s.py&lt;br/&gt;client plumbing]
+    cli[cli.py&lt;br/&gt;ocm-mcp human CLI] --&gt; appr
+    config[config.py&lt;br/&gt;settings + allowlists] -.-&gt; server
+    config -.-&gt; guard
+    config -.-&gt; appr
+"></div><pre class="mermaid-src"><code>flowchart TD
+    server[server.py&lt;br/&gt;MCP tools] --&gt; guard[guardrails.py&lt;br/&gt;static checks]
+    server --&gt; ocm[ocm.py&lt;br/&gt;hub + spoke ops]
+    server --&gt; appr[approvals.py&lt;br/&gt;proposals + tokens]
+    server --&gt; trace[tracing.py&lt;br/&gt;spans + audit]
+    ocm --&gt; k8s[k8s.py&lt;br/&gt;client plumbing]
+    cli[cli.py&lt;br/&gt;ocm-mcp human CLI] --&gt; appr
+    config[config.py&lt;br/&gt;settings + allowlists] -.-&gt; server
+    config -.-&gt; guard
+    config -.-&gt; appr
+</code></pre></div>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Module</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>server.py</code></td>
+<td>The MCP server. Defines every tool; the only surface the agent sees.</td>
+</tr>
+<tr>
+<td><code>guardrails.py</code></td>
+<td>Layer-1 static checks: exact GVK allow-list, namespaces, a Restricted-Pod-Security baseline (no root/privilege-escalation, drop-ALL, seccomp, no host/Secret/arbitrary-SA, volume + Service allow-lists), image pinning, and per-proposal limits. Pure functions, no cluster needed.</td>
+</tr>
+<tr>
+<td><code>ocm.py</code></td>
+<td>The OCM API layer: inventory, placement, work, add-on, registration and policy reads, the generic allow-listed reader, and the cordon/uncordon/set_label/accept lifecycle writes, summarized into agent-friendly shapes.</td>
+</tr>
+<tr>
+<td><code>k8s.py</code></td>
+<td>Kubernetes client construction: hub context, read-only spoke contexts, the CSR client.</td>
+</tr>
+<tr>
+<td><code>approvals.py</code></td>
+<td>Proposal store on disk + Ed25519 approval tokens whose claims bind the content hash, the operation (<code>apply</code>/<code>rollback</code>), and a TTL; ManifestWork, lifecycle-action, and rollback proposals.</td>
+</tr>
+<tr>
+<td><code>tracing.py</code></td>
+<td>One OpenTelemetry span and one hash-chained audit line per tool call (optional stderr echo for a SIEM).</td>
+</tr>
+<tr>
+<td><code>metrics.py</code></td>
+<td>Optional dependency-free Prometheus <code>/metrics</code> endpoint (<code>OCM_MCP_METRICS_PORT</code>).</td>
+</tr>
+<tr>
+<td><code>filelock.py</code></td>
+<td>Advisory file lock behind the atomic proposal writes, the spent-token ledger, and the per-proposal apply lock.</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td><code>ocm-mcp</code>: the human side (pending, show, approve, reject, audit, audit-verify, doctor, rotate-secret).</td>
+</tr>
+<tr>
+<td><code>config.py</code></td>
+<td>Settings from env, the protected-namespace set, the allowed-kinds set, the readable-resource allow-list, the allowed lifecycle actions, per-proposal limits, and the read-only backstop.</td>
+</tr>
+</tbody>
+</table></div><h2 id="the-tools-precisely">The tools, precisely <a class="header-anchor" href="#the-tools-precisely">#</a></h2>
+<p>The surface is <strong>35 tools across ten toolsets</strong>, but the shape is simple: almost
+everything is a safe read of the Open Cluster Management API, and only two toolsets
+can change anything, always through the same gate.</p>
+<div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart LR
+    subgraph Read [Read toolsets - no gate]
+      direction TB
+      i[inventory&lt;br/&gt;clusters, sets, claims]
+      o[observability&lt;br/&gt;health, events, logs]
+      p[placement&lt;br/&gt;placements, decisions, scores]
+      a[addons&lt;br/&gt;definitions, health]
+      wr[work reads&lt;br/&gt;status feedback]
+      g[resources&lt;br/&gt;allow-listed generic read]
+      au[audit&lt;br/&gt;proposals, trail]
+    end
+    subgraph Write [Write toolsets - gated]
+      direction TB
+      w1[propose_manifestwork] --&gt; w2[apply_manifestwork] --&gt; w3[rollback_manifestwork]
+      c1[propose_cluster_action] --&gt; c2[apply_cluster_action]
+    end
+"></div><pre class="mermaid-src"><code>flowchart LR
+    subgraph Read [Read toolsets - no gate]
+      direction TB
+      i[inventory&lt;br/&gt;clusters, sets, claims]
+      o[observability&lt;br/&gt;health, events, logs]
+      p[placement&lt;br/&gt;placements, decisions, scores]
+      a[addons&lt;br/&gt;definitions, health]
+      wr[work reads&lt;br/&gt;status feedback]
+      g[resources&lt;br/&gt;allow-listed generic read]
+      au[audit&lt;br/&gt;proposals, trail]
+    end
+    subgraph Write [Write toolsets - gated]
+      direction TB
+      w1[propose_manifestwork] --&gt; w2[apply_manifestwork] --&gt; w3[rollback_manifestwork]
+      c1[propose_cluster_action] --&gt; c2[apply_cluster_action]
+    end
+</code></pre></div>
+<p>Both write toolsets share one flow: <strong>propose</strong> runs static guardrails and a hub
+dry-run and stores the change pending; <strong>apply</strong> requires an approval token that
+verifies against the stored proposal's content hash. The <code>work</code> toolset proposes a
+<code>ManifestWork</code>; the <code>registration</code> toolset proposes an OCM lifecycle action
+(<code>cordon</code>, <code>uncordon</code>, <code>set_label</code>, <code>accept</code>). Setting <code>OCM_MCP_READ_ONLY=1</code>
+disables both write toolsets.</p>
+<p>The full list - every tool, its class, its arguments, and the OCM API it touches -
+is in the
+<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/tools.md">Tools and Prompts reference</a>.
+The server also ships <strong>ten MCP prompts</strong> (from <code>diagnose_fleet</code> and
+<code>remediate_with_approval</code> to <code>onboard_cluster</code>, <code>hosted_cluster_health</code>, and
+<code>policy_compliance_report</code>) that encode the safe workflow as reusable templates. Run
+<code>ocm-mcp doctor</code> to exercise every read tool against a live hub and print a
+PASS/EMPTY/SKIP/FAIL table before connecting an agent.</p>
+<h2 id="the-generic-reader-is-an-allow-list">The generic reader is an allow-list <a class="header-anchor" href="#the-generic-reader-is-an-allow-list">#</a></h2>
+<p><code>list_resources</code> and <code>get_resource</code> read any Open Cluster Management type through
+one interface - but only types on a fixed allow-list (ManagedCluster, Placement,
+ManifestWork, ManagedClusterAddOn, Klusterlet, and so on). This is deliberately an
+allow-list, not a deny-list: <code>Secret</code>, <code>ConfigMap</code>, and every other core kind are
+absent, so the dangerous read cannot be named. A capability that does not exist
+cannot be prompt-injected into use, and that guarantee does not depend on an
+operator remembering to set a flag.</p>
+<h2 id="the-approval-token-in-code-terms">The approval token, in code terms <a class="header-anchor" href="#the-approval-token-in-code-terms">#</a></h2>
+<pre><code>claims = {id, hash: content_hash, op: &quot;apply&quot; | &quot;rollback&quot;, exp: expiry}
+token  = base64(claims_json) . base64(Ed25519_sign(private_key, claims_json))
+</code></pre>
+<ul>
+<li>The <strong>private</strong> signing key lives at <code>OCM_MCP_HOME/approval_ed25519</code> (0600) and
+is used only by <code>ocm-mcp approve</code> on a trusted terminal. The MCP server loads
+only the <strong>public</strong> key (<code>approval_ed25519.pub</code>). The &quot;a compromised server cannot
+mint one&quot; property holds only when the private key is kept off the server - a
+separate account or device via <code>OCM_MCP_SIGNER_KEY</code>; co-located under one
+<code>OCM_MCP_HOME</code>, signer isolation is a filesystem convention, not a boundary.</li>
+<li>Each token carries a unique id and is <strong>single-use</strong>: verifying it at apply records
+the id as spent (under a lock, fsynced), so the same approval cannot be replayed. It
+also binds an issuer and audience, so a token minted for one deployment cannot be
+used against another.</li>
+<li><code>content_hash</code> is SHA-256 over the canonical JSON of the whole proposal
+(<code>{cluster, name, manifests, kind, action, params}</code>), so a token binds equally
+to a ManifestWork bundle, a lifecycle action's exact parameters, or a rollback.</li>
+<li><code>op</code> binds the token to one operation: an <code>apply</code> token can never authorize a
+<code>rollback</code>, which needs its own proposal and token.</li>
+<li>Verification checks, in order: the Ed25519 signature is valid for the public
+key, the id matches, the content hash matches, the operation matches, and the
+expiry is in the future. Change any byte of the proposal and the signature no
+longer verifies. Rotate the keypair with <code>ocm-mcp rotate-secret</code> to invalidate
+every outstanding token at once.</li>
+</ul>
+<h2 id="static-guardrail-checks-layer-1">Static guardrail checks (layer 1) <a class="header-anchor" href="#static-guardrail-checks-layer-1">#</a></h2>
+<p>Inputs are schema-checked first (a malformed manifest is a clean violation, not a
+crash), then each manifest is rejected on any of:</p>
+<ul>
+<li>an exact <code>(apiVersion, kind)</code> not on the allow-list (blocks group spoofing);</li>
+<li>a missing namespace, or a protected/platform one (<code>kube-*</code>, <code>openshift-*</code>,
+<code>open-cluster-management*</code>, <code>default</code>);</li>
+<li><strong>Restricted Pod Security</strong>, on every container incl. init/ephemeral:
+<code>automountServiceAccountToken</code> not <code>false</code>, an arbitrary <code>serviceAccountName</code>,
+missing <code>runAsNonRoot</code>, <code>runAsUser: 0</code>, <code>allowPrivilegeEscalation</code> not <code>false</code>,
+not dropping <code>ALL</code> capabilities, added capabilities, <code>privileged</code>, or a missing
+seccomp profile;</li>
+<li><code>hostNetwork</code> / <code>hostPID</code> / <code>hostIPC</code>;</li>
+<li>a volume outside the allow-list (only <code>configMap</code>/<code>emptyDir</code>/<code>downwardAPI</code>/
+projected-without-secrets - so no Secret/hostPath/PVC/CSI/NFS), or an indirect
+Secret env ref;</li>
+<li>a Service that is not <code>ClusterIP</code>, or that sets <code>externalIPs</code>;</li>
+<li>an unpinned image (<code>:latest</code> or no tag; a 64-hex <code>@sha256</code> digest when
+<code>OCM_MCP_REQUIRE_DIGEST</code> is set);</li>
+<li>a HorizontalPodAutoscaler <code>maxReplicas</code> over the cap, or a proposal over the byte
+or 10-manifest limits.</li>
+</ul>
+<p>All violations across all manifests are reported at once, so the agent can fix
+everything in one revision. The Kyverno layer enforces the same baseline on the hub.</p>
+<h2 id="observability">Observability <a class="header-anchor" href="#observability">#</a></h2>
+<p>Every tool call produces two independent records:</p>
+<ul>
+<li>an <strong>audit line</strong> in <code>OCM_MCP_HOME/audit.jsonl</code> (always on): tool, arguments
+with the approval token redacted, outcome, error, duration;</li>
+<li>an <strong>OpenTelemetry span</strong> (when the <code>[tracing]</code> extra is installed and
+<code>OTEL_EXPORTER_OTLP_ENDPOINT</code> is set), named <code>tool.&lt;name&gt;</code> with redacted
+args, exported over OTLP/HTTP to Jaeger or any OTel collector - and
+covered by an e2e step that asserts spans really arrive at an OTLP sink.</li>
+</ul>
+<p>The eval harness scores safety from the audit log, and the agent can read it
+back via <code>get_audit_trail</code> to write an accurate post-incident report.</p>
+<h2 id="tests">Tests <a class="header-anchor" href="#tests">#</a></h2>
+<ul>
+<li><code>tests/</code> unit tests (404; 100% statement and branch coverage): the full approval-token lifecycle (roundtrip,
+wrong-proposal, content-change invalidation, expiry, tampering, malformed,
+public-key-only verification, operation binding, keypair rotation) for both
+ManifestWork and lifecycle-action proposals, every static guardrail case
+(including GVK spoofing, indirect Secret access, and arbitrary service
+accounts), the generic reader's allow-list (Secrets and core kinds cannot be
+named), the HCP / ManagedClusterInfo / add-on shaping logic, and the hardening
+fixes (apply-time content re-check, robust PodSpec extraction). No cluster
+required.</li>
+<li><code>deploy/policies/tests/</code> Kyverno CLI suite (16 cases): good, bad, and
+human-created ManifestWorks. Offline, runs in CI.</li>
+</ul>
+<p>Next: <a href="/journey/guardrails-deep-dive/">Guardrails Deep Dive</a>.</p>
+
+
+    <nav class="pager"><a class="prev" href="/journey/how-it-works/"><span class="pager__dir">Previous</span><span class="pager__t">How it works</span></a><a class="next" href="/journey/tools-and-prompts/"><span class="pager__dir">Next</span><span class="pager__t">Tools and prompts</span></a></nav>
+
+    <p class="editlink">
+      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/wiki/Implementation.md">wiki/Implementation.md</a>
+      — this page is generated from it, so edit the markdown, not the site.
+    </p>
+  </article>
+
+  <nav class="toc" aria-label="On this page">
+    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#module-map">Module map</a></li><li class="lvl-2"><a href="#the-tools-precisely">The tools, precisely</a></li><li class="lvl-2"><a href="#the-generic-reader-is-an-allow-list">The generic reader is an allow-list</a></li><li class="lvl-2"><a href="#the-approval-token-in-code-terms">The approval token, in code terms</a></li><li class="lvl-2"><a href="#static-guardrail-checks-layer-1">Static guardrail checks (layer 1)</a></li><li class="lvl-2"><a href="#observability">Observability</a></li><li class="lvl-2"><a href="#tests">Tests</a></li></ul>
+  </nav>
+</main>
+
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <span>Built and maintained by <a href="https://www.linkedin.com/in/sandeepbazar/">Sandeep Bazar</a> · Apache-2.0 · generated from the repository's own markdown</span>
+    <nav>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server">Code</a>
+      <a href="https://pypi.org/p/ocm-mcp-server">PyPI</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/wiki">Wiki</a>
+      <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/SECURITY.md">Security</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/static/site.js?v=b72157bb91" defer></script>
+</body>
+</html>
