@@ -118,44 +118,46 @@
 it stronger, roughly in priority order. Several are good first contributions,
 see <a href="/journey/contributing/">Contributing</a>.</p>
 <div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
-    now[v0.1.0&lt;br/&gt;complete pattern, laptop to prod] --&gt; near[Near term]
+    now[shipped today&lt;br/&gt;complete pattern, laptop to prod] --&gt; near[Near term]
     now --&gt; mid[Mid term]
     now --&gt; long[Longer term]
-    near --&gt; n1[demo recording in README]
-    near --&gt; n2[published eval results, multi-model]
-    near --&gt; n3[upstream proposals filed]
+    near --&gt; n1[upstream proposals filed]
+    near --&gt; n2[maintainer diversity&lt;br/&gt;and public adopters]
     mid --&gt; m1[OCM cluster-proxy transport]
-    mid --&gt; m2[container image on ghcr.io]
-    mid --&gt; m3[Helm chart for in-cluster deploy]
+    mid --&gt; m2[authenticated HTTP transport]
+    mid --&gt; m3[off-box approval signer]
     long --&gt; l1[more chaos classes:&lt;br/&gt;node pressure, partitions, noisy neighbors]
     long --&gt; l2[Placement-aware fleet actions]
     long --&gt; l3[policy-pack presets per industry]
 "></div><pre class="mermaid-src"><code>flowchart TD
-    now[v0.1.0&lt;br/&gt;complete pattern, laptop to prod] --&gt; near[Near term]
+    now[shipped today&lt;br/&gt;complete pattern, laptop to prod] --&gt; near[Near term]
     now --&gt; mid[Mid term]
     now --&gt; long[Longer term]
-    near --&gt; n1[demo recording in README]
-    near --&gt; n2[published eval results, multi-model]
-    near --&gt; n3[upstream proposals filed]
+    near --&gt; n1[upstream proposals filed]
+    near --&gt; n2[maintainer diversity&lt;br/&gt;and public adopters]
     mid --&gt; m1[OCM cluster-proxy transport]
-    mid --&gt; m2[container image on ghcr.io]
-    mid --&gt; m3[Helm chart for in-cluster deploy]
+    mid --&gt; m2[authenticated HTTP transport]
+    mid --&gt; m3[off-box approval signer]
     long --&gt; l1[more chaos classes:&lt;br/&gt;node pressure, partitions, noisy neighbors]
     long --&gt; l2[Placement-aware fleet actions]
     long --&gt; l3[policy-pack presets per industry]
 </code></pre></div>
 <h2 id="near-term">Near term <a class="header-anchor" href="#near-term">#</a></h2>
 <ul>
-<li><strong>A recorded end-to-end demo</strong> in the README, so the flow is visible without
-a setup.</li>
-<li><strong>Published evaluation results</strong> across several models, with the failures
-called out. See <a href="/journey/evaluation/">Evaluation</a>.</li>
-<li><strong>Upstream proposals filed</strong> from
+<li><strong>The remaining upstream proposals.</strong> The Kyverno one is filed:
+<a href="https://github.com/kyverno/policies/issues/1534" rel="noopener">kyverno/policies#1534</a>
+proposes the ManifestWork-envelope pattern to the policy catalog, since nothing
+there demonstrates validating workloads embedded inside another CR. Two drafts
+remain in
 <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/upstream-notes.md"><code>docs/upstream-notes.md</code></a>:
-long-running operations in MCP, richer ManifestWork failure feedback in OCM,
-and contributing the ManifestWork-envelope policy pattern to the Kyverno
-catalog.</li>
+long-running operations in MCP, and richer ManifestWork failure feedback in OCM.</li>
+<li><strong>Maintainer diversity and public adopters.</strong> These gate CNCF Sandbox and are
+the only steps that cannot be engineered - see
+<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/cncf-sandbox-readiness.md">CNCF readiness</a>.</li>
 </ul>
+<p><em>Shipped: a recorded end-to-end demo in the README, and published evaluation
+results across two models with the failures called out - see
+<a href="/journey/evaluation/">Evaluation</a>.</em></p>
 <h2 id="mid-term">Mid term <a class="header-anchor" href="#mid-term">#</a></h2>
 <ul>
 <li><strong>OCM cluster-proxy transport</strong> so the server host never holds spoke
