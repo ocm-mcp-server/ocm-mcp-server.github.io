@@ -166,8 +166,8 @@ transparent checklist of what is in place and what remains before applying.</p>
 </tr>
 <tr>
 <td>DCO sign-off on commits</td>
-<td>Partial</td>
-<td>requested in the PR checklist; automated enforcement not yet wired, early history predates the practice</td>
+<td>Done</td>
+<td>enforced by the <code>dco</code> job on every pull request; early single-maintainer history predates the practice</td>
 </tr>
 <tr>
 <td>Public roadmap</td>
@@ -261,8 +261,9 @@ transparent checklist of what is in place and what remains before applying.</p>
 </tr>
 </tbody>
 </table></div><h2 id="whats-left-before-applying">What's left before applying <a class="header-anchor" href="#whats-left-before-applying">#</a></h2>
-<p>Sandbox readiness here is mostly a community milestone, not an engineering one.
-Four steps remain, in rough order of leverage.</p>
+<p>Sandbox readiness here is now entirely a community milestone. The engineering
+side is done - DCO is enforced in CI and published tags are immutable - so the
+three steps that remain all need people rather than code.</p>
 <ol>
 <li><strong>Three maintainers from at least two employer organizations.</strong> Current CNCF
 lifecycle requirements ask for this, with a Company/Organization column in
@@ -280,10 +281,6 @@ project's leadership. The upstream issues are already drafted in
 <a href="/reference/upstream-notes/">upstream notes</a>.
 <em>Needs: those issues filed, and a public statement of support or
 non-objection.</em></li>
-<li><strong>Automated DCO enforcement and immutable release tags.</strong> Wire DCO checking
-into CI, and treat published version tags as immutable - a failed release
-rolls forward to the next patch version and never re-cuts the same tag.
-<em>Needs: nothing external. This one is ours to land.</em></li>
 </ol>
 <h2 id="how-to-help">How to help <a class="header-anchor" href="#how-to-help">#</a></h2>
 <p>The highest-leverage contributions are: add yourself to <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/ADOPTERS.md">ADOPTERS.md</a>,
