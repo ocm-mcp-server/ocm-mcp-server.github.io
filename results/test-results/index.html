@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ocm-mcp-server - end-to-end test report · ocm-mcp-server</title>
-<meta name="description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-29 22:58:10 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
+<meta name="description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-30 00:17:01 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
 <meta property="og:title" content="ocm-mcp-server - end-to-end test report · ocm-mcp-server">
-<meta property="og:description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-29 22:58:10 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
+<meta property="og:description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-30 00:17:01 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ocm-mcp-server">
 <meta property="og:url" content="https://ocm-mcp-server.github.io/results/test-results/">
@@ -21,7 +21,7 @@
 <meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ocm-mcp-server - end-to-end test report · ocm-mcp-server">
-<meta name="twitter:description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-29 22:58:10 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
+<meta name="twitter:description" content="Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-30 00:17:01 &amp;nbsp;·&amp;nbsp; local kind fleet via podman, Open Cluster Management hub">
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/results/test-results/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
@@ -77,7 +77,7 @@
     </svg>
     ocm-mcp-server
   </a>
-  <nav class="hdr__nav"><div class="menu"><a class="menu__t" href="/journey/why-this-exists/">Start here<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Why it exists, how it works, and what it refuses to automate</p><div class="menu__grid"><a href="/journey/why-this-exists/"><span class="menu__n">01</span><span><span class="menu__l">Why this exists</span><span class="menu__d">Every platform team running Kubernetes at scale eventually hears it from l</span></span></a><a href="/journey/the-idea/"><span class="menu__n">02</span><span><span class="menu__l">The idea</span><span class="menu__d">Fleets already have a place where multi-cluster actions are observed and c</span></span></a><a href="/journey/how-it-works/"><span class="menu__n">03</span><span><span class="menu__l">How it works</span><span class="menu__d">The agent talks only to the server. The server holds the kubeconfig, appli</span></span></a><a href="/journey/implementation/"><span class="menu__n">04</span><span><span class="menu__l">Implementation</span><span class="menu__d">What is actually in the code, so you can read it with a map in hand.</span></span></a><a href="/journey/tools-and-prompts/"><span class="menu__n">05</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">35 tools across ten toolsets, plus ten prompts. Almost all of it is read: </span></span></a><a href="/journey/guardrails-deep-dive/"><span class="menu__n">06</span><span><span class="menu__l">Guardrails deep dive</span><span class="menu__d">Four independent layers stand between the model and your clusters. A chang</span></span></a><a href="/journey/getting-started/"><span class="menu__n">07</span><span><span class="menu__l">Getting started</span><span class="menu__d">Three paths, from &quot;try it on a laptop&quot; to &quot;run it against production.&quot; Ful</span></span></a><a href="/journey/use-cases-and-impact/"><span class="menu__n">08</span><span><span class="menu__l">Use cases and impact</span><span class="menu__d">This is not &quot;AI replaces your on-call.&quot; It is &quot;AI does the first fifteen m</span></span></a><a href="/journey/evaluation/"><span class="menu__n">09</span><span><span class="menu__l">Evaluation</span><span class="menu__d">Claims about agent safety are cheap. This project ships a harness that pro</span></span></a><a href="/journey/roadmap/"><span class="menu__n">10</span><span><span class="menu__l">What&#x27;s next</span><span class="menu__d">The pattern is complete and runnable today. These are the directions that </span></span></a><a href="/journey/contributing/"><span class="menu__n">11</span><span><span class="menu__l">Contributing</span><span class="menu__d">Help is welcome, and the project is deliberately structured so that contri</span></span></a><a href="/journey/faq/"><span class="menu__n">12</span><span><span class="menu__l">FAQ</span><span class="menu__d">Open Cluster Management (open-cluster-management.io), the CNCF multi-clust</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/reference/architecture/">Run it<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Architecture, deployment paths, the tool surface, the threat model</p><div class="menu__grid"><a href="/reference/architecture/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Architecture</span><span class="menu__d">Fleet operations already flow through a hub: Open Cluster Management gives</span></span></a><a href="/reference/guardrails/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Guardrails</span><span class="menu__d">Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are</span></span></a><a href="/reference/policy-pack/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Policy pack</span><span class="menu__d">The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-</span></span></a><a href="/reference/deployment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Deployment</span><span class="menu__d">Running the server is documented below. The settings that make this reposi</span></span></a><a href="/reference/repository-setup/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Repository setup</span><span class="menu__d">Most of this project is reproducible from the repository alone: clone it, </span></span></a><a href="/reference/tools/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">The server exposes 35 tools across ten toolsets plus ten prompts. This pag</span></span></a><a href="/reference/examples/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Worked examples</span><span class="menu__d">Real end-to-end flows. Commands are exact; agent turns are lightly condens</span></span></a><a href="/reference/kubeconfig-contexts/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Kubeconfig contexts</span><span class="menu__d">This server is configured with kubeconfig context names, like kind-hub or </span></span></a><a href="/reference/benchmarks/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Benchmarks</span><span class="menu__d">Two questions this answers: does the hub-side paged list (ocm.pagedlist) s</span></span></a><a href="/reference/security-self-assessment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Security self-assessment</span><span class="menu__d">This self-assessment follows the structure used by the CNCF TAG-Security s</span></span></a><a href="/reference/cncf-sandbox-readiness/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">CNCF readiness</span><span class="menu__d">This document is a self-check of how ocm-mcp-server measures up against th</span></span></a><a href="/reference/demo-script/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Demo script</span><span class="menu__d">Preparation: make bootstrap done, server registered in the MCP client, Jae</span></span></a><a href="/reference/upstream-notes/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Upstream notes</span><span class="menu__d">Draft issue texts, ready to file against the respective projects. Once fil</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/results/test-results/" aria-current="true">Proof<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel"><p class="menu__blurb">A real fleet run, multi-model evaluation, coverage</p><div class="menu__grid"><a href="/results/test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">End-to-end fleet run</span><span class="menu__d">Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-29 22:58:10 &amp;nbsp;·&amp;n</span></span></a><a href="/results/unit-test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Unit tests and coverage</span><span class="menu__d">Verdict: 🟢 ALL PASSING &amp;nbsp;·&amp;nbsp; generated 2026-07-29 02:25:13 UTC &amp;nb</span></span></a></div></div></div></nav>
+  <nav class="hdr__nav"><div class="menu"><a class="menu__t" href="/journey/why-this-exists/">Start here<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Why it exists, how it works, and what it refuses to automate</p><div class="menu__grid"><a href="/journey/why-this-exists/"><span class="menu__n">01</span><span><span class="menu__l">Why this exists</span><span class="menu__d">Every platform team running Kubernetes at scale eventually hears it from l</span></span></a><a href="/journey/the-idea/"><span class="menu__n">02</span><span><span class="menu__l">The idea</span><span class="menu__d">Fleets already have a place where multi-cluster actions are observed and c</span></span></a><a href="/journey/how-it-works/"><span class="menu__n">03</span><span><span class="menu__l">How it works</span><span class="menu__d">The agent talks only to the server. The server holds the kubeconfig, appli</span></span></a><a href="/journey/implementation/"><span class="menu__n">04</span><span><span class="menu__l">Implementation</span><span class="menu__d">What is actually in the code, so you can read it with a map in hand.</span></span></a><a href="/journey/tools-and-prompts/"><span class="menu__n">05</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">35 tools across ten toolsets, plus ten prompts. Almost all of it is read: </span></span></a><a href="/journey/guardrails-deep-dive/"><span class="menu__n">06</span><span><span class="menu__l">Guardrails deep dive</span><span class="menu__d">Four independent layers stand between the model and your clusters. A chang</span></span></a><a href="/journey/getting-started/"><span class="menu__n">07</span><span><span class="menu__l">Getting started</span><span class="menu__d">Three paths, from &quot;try it on a laptop&quot; to &quot;run it against production.&quot; Ful</span></span></a><a href="/journey/use-cases-and-impact/"><span class="menu__n">08</span><span><span class="menu__l">Use cases and impact</span><span class="menu__d">This is not &quot;AI replaces your on-call.&quot; It is &quot;AI does the first fifteen m</span></span></a><a href="/journey/evaluation/"><span class="menu__n">09</span><span><span class="menu__l">Evaluation</span><span class="menu__d">Claims about agent safety are cheap. This project ships a harness that pro</span></span></a><a href="/journey/roadmap/"><span class="menu__n">10</span><span><span class="menu__l">What&#x27;s next</span><span class="menu__d">The pattern is complete and runnable today. These are the directions that </span></span></a><a href="/journey/contributing/"><span class="menu__n">11</span><span><span class="menu__l">Contributing</span><span class="menu__d">Help is welcome, and the project is deliberately structured so that contri</span></span></a><a href="/journey/faq/"><span class="menu__n">12</span><span><span class="menu__l">FAQ</span><span class="menu__d">Open Cluster Management (open-cluster-management.io), the CNCF multi-clust</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/reference/architecture/">Run it<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel menu__panel--wide"><p class="menu__blurb">Architecture, deployment paths, the tool surface, the threat model</p><div class="menu__grid"><a href="/reference/architecture/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Architecture</span><span class="menu__d">Fleet operations already flow through a hub: Open Cluster Management gives</span></span></a><a href="/reference/guardrails/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Guardrails</span><span class="menu__d">Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are</span></span></a><a href="/reference/policy-pack/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Policy pack</span><span class="menu__d">The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-</span></span></a><a href="/reference/deployment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Deployment</span><span class="menu__d">Running the server is documented below. The settings that make this reposi</span></span></a><a href="/reference/repository-setup/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Repository setup</span><span class="menu__d">Most of this project is reproducible from the repository alone: clone it, </span></span></a><a href="/reference/tools/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Tools and prompts</span><span class="menu__d">The server exposes 35 tools across ten toolsets plus ten prompts. This pag</span></span></a><a href="/reference/examples/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Worked examples</span><span class="menu__d">Real end-to-end flows. Commands are exact; agent turns are lightly condens</span></span></a><a href="/reference/kubeconfig-contexts/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Kubeconfig contexts</span><span class="menu__d">This server is configured with kubeconfig context names, like kind-hub or </span></span></a><a href="/reference/benchmarks/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Benchmarks</span><span class="menu__d">Two questions this answers: does the hub-side paged list (ocm.pagedlist) s</span></span></a><a href="/reference/security-self-assessment/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Security self-assessment</span><span class="menu__d">This self-assessment follows the structure used by the CNCF TAG-Security s</span></span></a><a href="/reference/cncf-sandbox-readiness/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">CNCF readiness</span><span class="menu__d">This document is a self-check of how ocm-mcp-server measures up against th</span></span></a><a href="/reference/demo-script/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Demo script</span><span class="menu__d">Preparation: make bootstrap done, server registered in the MCP client, Jae</span></span></a><a href="/reference/upstream-notes/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Upstream notes</span><span class="menu__d">Draft issue texts, ready to file against the respective projects. Once fil</span></span></a></div></div></div><div class="menu"><a class="menu__t" href="/results/test-results/" aria-current="true">Proof<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></a><div class="menu__panel"><p class="menu__blurb">A real fleet run, multi-model evaluation, coverage</p><div class="menu__grid"><a href="/results/test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">End-to-end fleet run</span><span class="menu__d">Verdict: 🟢 ALL GREEN &amp;nbsp;·&amp;nbsp; generated 2026-08-30 00:17:01 &amp;nbsp;·&amp;n</span></span></a><a href="/results/unit-test-results/"><span class="menu__n">&rsaquo;</span><span><span class="menu__l">Unit tests and coverage</span><span class="menu__d">Verdict: 🟢 ALL PASSING &amp;nbsp;·&amp;nbsp; generated 2026-07-29 02:25:13 UTC &amp;nb</span></span></a></div></div></div></nav>
   <div class="hdr__spacer"></div>
   <button class="iconbtn" id="theme" type="button" aria-label="Toggle colour theme">
     <svg class="theme-light-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -115,7 +115,7 @@
     <h1>ocm-mcp-server - end-to-end test report</h1>
 
 <!-- Generated by hack/e2e-local.sh (hack/e2e_report.py). Do not edit by hand; re-run the end-to-end test to refresh. -->
-<p><strong>Verdict: 🟢 ALL GREEN</strong>  ·  generated 2026-08-29 22:58:10  ·  local kind fleet via podman, Open Cluster Management hub</p>
+<p><strong>Verdict: 🟢 ALL GREEN</strong>  ·  generated 2026-08-30 00:17:01  ·  local kind fleet via podman, Open Cluster Management hub</p>
 <div class="table-wrap"><table><thead>
 <tr>
 <th style="text-align:right">Passed</th>
@@ -192,7 +192,7 @@
 <p><em>Install the MCP server and its ocm-mcp CLI into an isolated virtualenv.</em></p>
 <pre><code>$ pip install -e .
 </code></pre>
-<pre><code>ocm-mcp-server 0.5.0
+<pre><code>ocm-mcp-server 0.6.0
 </code></pre>
 <h2 id="3-container-engine">3. Container engine <a class="header-anchor" href="#3-container-engine">#</a></h2>
 <h3 id="-ok-podman-running">✅ <code>OK</code> podman running <a class="header-anchor" href="#-ok-podman-running">#</a></h3>
@@ -232,8 +232,8 @@ Verify the fleet:
 <pre><code>$ kubectl --context kind-hub get managedclusters
 </code></pre>
 <pre><code>NAME       HUB ACCEPTED   MANAGED CLUSTER URLS                  JOINED   AVAILABLE   AGE
-cluster1   true           https://cluster1-control-plane:6443   True     True        97s
-cluster2   true           https://cluster2-control-plane:6443   True     True        71s
+cluster1   true           https://cluster1-control-plane:6443   True     True        98s
+cluster2   true           https://cluster2-control-plane:6443   True     True        74s
 </code></pre>
 <h2 id="4b-enrich-fleet">4b. Enrich fleet <a class="header-anchor" href="#4b-enrich-fleet">#</a></h2>
 <h3 id="-ok-add-on-feature-gate-and-api-fixtures">✅ <code>OK</code> add-on, feature gate, and API fixtures <a class="header-anchor" href="#-ok-add-on-feature-gate-and-api-fixtures">#</a></h3>
@@ -253,7 +253,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
 <p><em>Deploy a marker ManifestWork via propose+approve+apply so the work tools report on something real.</em></p>
 <pre><code>$ propose_manifestwork -&gt; apply_manifestwork
 </code></pre>
-<pre><code>proposal_id=8fe7f735d2d24f1ead2be880c714a20f
+<pre><code>proposal_id=a813d57aac3945c38788290166ed976c
 {
   &quot;status&quot;: &quot;applied&quot;,
   &quot;cluster&quot;: &quot;cluster1&quot;,
@@ -439,7 +439,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
     &quot;available&quot;: 2,
     &quot;unavailable&quot;: 0,
     &quot;spoke_checked&quot;: 2,
-    &quot;with_issues&quot;: 2
+    &quot;with_issues&quot;: 1
   },
   &quot;clusters&quot;: [
     {
@@ -471,9 +471,9 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
         &quot;ManagedClusterConditionClockSynced&quot;: &quot;True&quot;
       },
       &quot;unhealthy_pods&quot;: [],
-      &quot;degraded_deployments&quot;: [
-        {
-... (9 more lines)
+      &quot;degraded_deployments&quot;: [],
+      &quot;spoke_view&quot;: &quot;ok&quot;
+... (3 more lines)
 </code></pre>
 <h3 id="-ok-query_eventscluster1">✅ <code>OK</code> query_events(cluster1) <a class="header-anchor" href="#-ok-query_eventscluster1">#</a></h3>
 <p><em>Recent Kubernetes events - the 'why' behind failures.</em></p>
@@ -484,15 +484,15 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;Pulled&quot;,
-    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-xhtcp&quot;,
+    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-mmrnp&quot;,
     &quot;count&quot;: 1,
-    &quot;message&quot;: &quot;Successfully pulled image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47\&quot; in 208ms (11.175s including waiting). Image size: 50637101 bytes.&quot;
+    &quot;message&quot;: &quot;Successfully pulled image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47\&quot; in 194ms (17.066s including waiting). Image size: 50637101 bytes.&quot;
   },
   {
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;Created&quot;,
-    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-xhtcp&quot;,
+    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-mmrnp&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Created container payments&quot;
   },
@@ -500,7 +500,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;Started&quot;,
-    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-xhtcp&quot;,
+    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-mmrnp&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Started container payments&quot;
   },
@@ -508,15 +508,15 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;Pulled&quot;,
-    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-xnmjl&quot;,
+    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-qnkvs&quot;,
     &quot;count&quot;: 1,
-    &quot;message&quot;: &quot;Successfully pulled image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47\&quot; in 10.974s (10.974s including waiting). Image size: 50637101 bytes.&quot;
+    &quot;message&quot;: &quot;Successfully pulled image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47\&quot; in 16.873s (16.873s including waiting). Image size: 50637101 bytes.&quot;
   },
   {
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;Created&quot;,
-    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-xnmjl&quot;,
+    &quot;object&quot;: &quot;Pod/payments-5555cb47bc-qnkvs&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Created container payments&quot;
 ... (13 more lines)
@@ -527,7 +527,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
 </code></pre>
 <pre><code>[
   {
-    &quot;name&quot;: &quot;demo-mwrszm9xk&quot;,
+    &quot;name&quot;: &quot;demo-mwrsnlhmd&quot;,
     &quot;applied&quot;: &quot;True&quot;,
     &quot;available&quot;: &quot;True&quot;,
     &quot;resources&quot;: [
@@ -778,7 +778,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
   &quot;apiVersion&quot;: &quot;cluster.open-cluster-management.io/v1&quot;,
   &quot;kind&quot;: &quot;ManagedCluster&quot;,
   &quot;metadata&quot;: {
-    &quot;creationTimestamp&quot;: &quot;2026-08-29T17:25:09Z&quot;,
+    &quot;creationTimestamp&quot;: &quot;2026-08-29T18:43:59Z&quot;,
     &quot;finalizers&quot;: [
       &quot;cluster.open-cluster-management.io/resource-cleanup&quot;,
       &quot;cluster.open-cluster-management.io/api-resource-cleanup&quot;
@@ -799,7 +799,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
         },
         &quot;manager&quot;: &quot;clusteradm&quot;,
         &quot;operation&quot;: &quot;Update&quot;,
-        &quot;time&quot;: &quot;2026-08-29T17:25:37Z&quot;
+        &quot;time&quot;: &quot;2026-08-29T18:44:32Z&quot;
       },
       {
         &quot;apiVersion&quot;: &quot;cluster.open-cluster-management.io/v1&quot;,
@@ -828,8 +828,8 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
 </code></pre>
 <pre><code>{
   &quot;namespace&quot;: &quot;shop&quot;,
-  &quot;pod&quot;: &quot;payments-5555cb47bc-xhtcp&quot;,
-  &quot;log_tail&quot;: &quot;b'I0829 17:26:58.409211       1 log.go:245] Started HTTP server on port 8080\\nI0829 17:26:58.409300       1 log.go:245] Started UDP server on port  8081\\nI0829 17:27:00.290023       1 log.go:245] GET /healthz\\n'&quot;
+  &quot;pod&quot;: &quot;payments-5555cb47bc-mmrnp&quot;,
+  &quot;log_tail&quot;: &quot;b'I0829 18:45:55.084434       1 log.go:245] Started HTTP server on port 8080\\nI0829 18:45:55.084512       1 log.go:245] Started UDP server on port  8081\\n'&quot;
 }
 </code></pre>
 <h3 id="-ok-get_hosted_clusterdemo-hcp">✅ <code>OK</code> get_hosted_cluster(demo-hcp) <a class="header-anchor" href="#-ok-get_hosted_clusterdemo-hcp">#</a></h3>
@@ -863,7 +863,7 @@ cluster2   true           https://cluster2-control-plane:6443   True     True   
 <p><em>The agent PROPOSES a change. It must pass static guardrails and a Kyverno dry-run first; nothing is applied yet.</em></p>
 <pre><code>$ tool: propose_manifestwork
 </code></pre>
-<pre><code>proposal_id=359dabb232e94cc68e7291d99cc10483
+<pre><code>proposal_id=152019fa7e554bfe9561f93eda385938
 status=pending_approval
 </code></pre>
 <h3 id="-pass-apply-with-a-bad-token">✅ <code>PASS</code> apply with a BAD token <a class="header-anchor" href="#-pass-apply-with-a-bad-token">#</a></h3>
@@ -874,9 +874,9 @@ status=pending_approval
 </code></pre>
 <h3 id="-ok-ocm-mcp-approve-human">✅ <code>OK</code> ocm-mcp approve (human) <a class="header-anchor" href="#-ok-ocm-mcp-approve-human">#</a></h3>
 <p><em>A human on a trusted terminal mints an approval token: an Ed25519 signature binding the exact content and operation. The server holds only the public key, so it can verify a token but can never mint one - and neither can the agent.</em></p>
-<pre><code>$ ocm-mcp approve 359dabb232e94cc68e7291d99cc10483
+<pre><code>$ ocm-mcp approve 152019fa7e554bfe9561f93eda385938
 </code></pre>
-<pre><code>token minted (...HZxpHxRltQDQ)
+<pre><code>token minted (...oY4o1wLOeaDw)
 </code></pre>
 <h3 id="-ok-apply_manifestworktoken">✅ <code>OK</code> apply_manifestwork(token) <a class="header-anchor" href="#-ok-apply_manifestworktoken">#</a></h3>
 <p><em>With a valid token, the server verifies it and delivers the change as an OCM ManifestWork.</em></p>
@@ -920,9 +920,9 @@ status=pending_approval
 <pre><code>$ tool: propose_rollback
 </code></pre>
 <pre><code>{
-  &quot;rollback_proposal_id&quot;: &quot;e2ef0d05f9a3406eb8c1e6cff6253c1e&quot;,
+  &quot;rollback_proposal_id&quot;: &quot;98cadb7f7ebf41e7829c1c24e4570ae2&quot;,
   &quot;status&quot;: &quot;pending_approval&quot;,
-  &quot;next_step&quot;: &quot;Ask the human operator to run: ocm-mcp approve e2ef0d05f9a3406eb8c1e6cff6253c1e and give you the token, then call rollback_manifestwork(e2ef0d05f9a3406eb8c1e6cff6253c1e, &lt;token&gt;).&quot;
+  &quot;next_step&quot;: &quot;Ask the human operator to run: ocm-mcp approve 98cadb7f7ebf41e7829c1c24e4570ae2 and give you the token, then call rollback_manifestwork(98cadb7f7ebf41e7829c1c24e4570ae2, &lt;token&gt;).&quot;
 }
 </code></pre>
 <h3 id="-pass-rollback-with-an-apply-token">✅ <code>PASS</code> rollback with an APPLY token <a class="header-anchor" href="#-pass-rollback-with-an-apply-token">#</a></h3>
@@ -953,17 +953,17 @@ status=pending_approval
 <pre><code>$ tool: propose_cluster_action
 </code></pre>
 <pre><code>{
-  &quot;proposal_id&quot;: &quot;c8c72f847a784a3ba66f50186b7ffb85&quot;,
+  &quot;proposal_id&quot;: &quot;6060f330ebbb400cb423a3c8f768d343&quot;,
   &quot;status&quot;: &quot;pending_approval&quot;,
   &quot;action&quot;: &quot;cordon&quot;,
-  &quot;next_step&quot;: &quot;Ask the human operator to run: ocm-mcp approve c8c72f847a784a3ba66f50186b7ffb85 and provide you the approval token, then call apply_cluster_action.&quot;
+  &quot;next_step&quot;: &quot;Ask the human operator to run: ocm-mcp approve 6060f330ebbb400cb423a3c8f768d343 and provide you the approval token, then call apply_cluster_action.&quot;
 }
 </code></pre>
 <h3 id="-ok-apply_cluster_actioncordon">✅ <code>OK</code> apply_cluster_action(cordon) <a class="header-anchor" href="#-ok-apply_cluster_actioncordon">#</a></h3>
 <p><em>Applied after approval; the taint now keeps new work off this cluster.</em></p>
 <pre><code>$ tool: apply_cluster_action
 </code></pre>
-<pre><code>taints=[{&quot;effect&quot;: &quot;NoSelect&quot;, &quot;key&quot;: &quot;ocm-mcp-server.io/cordoned&quot;, &quot;timeAdded&quot;: &quot;2026-08-29T17:27:15Z&quot;, &quot;value&quot;: &quot;true&quot;}]
+<pre><code>taints=[{&quot;effect&quot;: &quot;NoSelect&quot;, &quot;key&quot;: &quot;ocm-mcp-server.io/cordoned&quot;, &quot;timeAdded&quot;: &quot;2026-08-29T18:46:05Z&quot;, &quot;value&quot;: &quot;true&quot;}]
 </code></pre>
 <h3 id="-ok-uncordon-restore">✅ <code>OK</code> uncordon (restore) <a class="header-anchor" href="#-ok-uncordon-restore">#</a></h3>
 <p><em>Remove the taint so the cluster is schedulable again.</em></p>
@@ -1150,10 +1150,10 @@ Follow the safe remediation workflow:
 <pre><code>$ tool: get_audit_trail
 </code></pre>
 <pre><code>[
-{&quot;tool&quot;: &quot;apply_cluster_action&quot;, &quot;args&quot;: {&quot;proposal_id&quot;: &quot;3a678d2716d943f6aa46c1007f9dc3ed&quot;, &quot;approval_token&quot;: &quot;&lt;redacted&gt;&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 8, &quot;ts&quot;: 1788024435.108356, &quot;actor&quot;: &quot;sandeepbazar:2646&quot;, &quot;seq&quot;: 15, &quot;prev&quot;: &quot;1662d9acb0647323e68220bf9bfcaf0f45050ede71b5a493dade185901215b42&quot;, &quot;hash&quot;: &quot;a82b4995a0d5715d117e10c4b379fe9dd6049fe59a9a2b18841df186598a8f41&quot;},
-{&quot;tool&quot;: &quot;propose_cluster_action&quot;, &quot;args&quot;: {&quot;cluster&quot;: &quot;cluster1&quot;, &quot;action&quot;: &quot;accept&quot;, &quot;summary&quot;: &quot;accept (gated, idempotent)&quot;, &quot;params_json&quot;: &quot;{}&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 8, &quot;ts&quot;: 1788024435.118815, &quot;actor&quot;: &quot;sandeepbazar:2646&quot;, &quot;seq&quot;: 16, &quot;prev&quot;: &quot;a82b4995a0d5715d117e10c4b379fe9dd6049fe59a9a2b18841df186598a8f41&quot;, &quot;hash&quot;: &quot;49aba6ff91e1f4ebecbfccdf309512cd7acc489a50d6ad6fcf1348baf404e7b2&quot;},
-{&quot;tool&quot;: &quot;apply_cluster_action&quot;, &quot;args&quot;: {&quot;proposal_id&quot;: &quot;247ccc17ba144d748f47e6db37f14828&quot;, &quot;approval_token&quot;: &quot;&lt;redacted&gt;&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 9, &quot;ts&quot;: 1788024435.12846, &quot;actor&quot;: &quot;sandeepbazar:2646&quot;, &quot;seq&quot;: 17, &quot;prev&quot;: &quot;49aba6ff91e1f4ebecbfccdf309512cd7acc489a50d6ad6fcf1348baf404e7b2&quot;, &quot;hash&quot;: &quot;ff4b6e4628ebccdc1bfcd6d20516fbb02b6563c9bd8fa2db505873a786f75fb1&quot;},
-{&quot;tool&quot;: &quot;propose_cluster_action&quot;, &quot;args&quot;: {&quot;cluster&quot;: &quot;cluster1&quot;, &quot;action&quot;: &quot;enable_addon&quot;, &quot;summary&quot;: &quot;enable_addon (gated)&quot;, &quot;params_json&quot;: &quot;{\&quot;addon\&quot;: \&quot;e2e-demo-addon\&quot;}&quot;}, &quot;outcome&quot;: &quot;ok&quot;, 
+{&quot;tool&quot;: &quot;apply_cluster_action&quot;, &quot;args&quot;: {&quot;proposal_id&quot;: &quot;4f5b6f37466f4cd9a18189e75d7cdbae&quot;, &quot;approval_token&quot;: &quot;&lt;redacted&gt;&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 6, &quot;ts&quot;: 1788029166.042579, &quot;actor&quot;: &quot;sandeepbazar:36854&quot;, &quot;seq&quot;: 15, &quot;prev&quot;: &quot;6ea0dc4344f20ad21576e0f475bf87ea5ea0c3e4f90319610f0e5f4243fc5852&quot;, &quot;hash&quot;: &quot;2d26678de765b50e90cab4a7e31e61cbedd6c6adb6b1f89b3d8502c3ba200a12&quot;},
+{&quot;tool&quot;: &quot;propose_cluster_action&quot;, &quot;args&quot;: {&quot;cluster&quot;: &quot;cluster1&quot;, &quot;action&quot;: &quot;accept&quot;, &quot;summary&quot;: &quot;accept (gated, idempotent)&quot;, &quot;params_json&quot;: &quot;{}&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 7, &quot;ts&quot;: 1788029166.052022, &quot;actor&quot;: &quot;sandeepbazar:36854&quot;, &quot;seq&quot;: 16, &quot;prev&quot;: &quot;2d26678de765b50e90cab4a7e31e61cbedd6c6adb6b1f89b3d8502c3ba200a12&quot;, &quot;hash&quot;: &quot;b6d4ab47084051b2abb161b7f6d751b7c10368f13ef97783466f5ba4d29b7bf5&quot;},
+{&quot;tool&quot;: &quot;apply_cluster_action&quot;, &quot;args&quot;: {&quot;proposal_id&quot;: &quot;da77e9bf715e4f7ea88fb9edfa2e4d9e&quot;, &quot;approval_token&quot;: &quot;&lt;redacted&gt;&quot;}, &quot;outcome&quot;: &quot;ok&quot;, &quot;error&quot;: &quot;&quot;, &quot;duration_ms&quot;: 10, &quot;ts&quot;: 1788029166.0630322, &quot;actor&quot;: &quot;sandeepbazar:36854&quot;, &quot;seq&quot;: 17, &quot;prev&quot;: &quot;b6d4ab47084051b2abb161b7f6d751b7c10368f13ef97783466f5ba4d29b7bf5&quot;, &quot;hash&quot;: &quot;3389d5d15fda0b6fda35ff04717cbbcd2e4d26c8dabba8387c118fb5ac23cdf7&quot;},
+{&quot;tool&quot;: &quot;propose_cluster_action&quot;, &quot;args&quot;: {&quot;cluster&quot;: &quot;cluster1&quot;, &quot;action&quot;: &quot;enable_addon&quot;, &quot;summary&quot;: &quot;enable_addon (gated)&quot;, &quot;params_json&quot;: &quot;{\&quot;addon\&quot;: \&quot;e2e-demo-addon\&quot;}&quot;}, &quot;outcome&quot;: 
 ... (truncated)
 </code></pre>
 <h2 id="11-mcp-protocol-layer---the-real-server-binary-over-stdio-json-rpc">11. MCP protocol layer - the real server binary over stdio JSON-RPC <a class="header-anchor" href="#11-mcp-protocol-layer---the-real-server-binary-over-stdio-json-rpc">#</a></h2>
@@ -1194,7 +1194,7 @@ Follow the safe remediation workflow:
 <p><em>The just-spent token must never work twice.</em></p>
 <pre><code>$ apply_manifestwork(replayed token)
 </code></pre>
-<pre><code>REJECTED: proposal 5a520ec320f44e28a0d4b4cf6f6b6878 is 'applied', not pending.
+<pre><code>REJECTED: proposal 44d4ebab4ac0433084c2d67bdf35bcef is 'applied', not pending.
 </code></pre>
 <h3 id="-pass-read-only-mode-refuses-writes">✅ <code>PASS</code> read-only mode refuses writes <a class="header-anchor" href="#-pass-read-only-mode-refuses-writes">#</a></h3>
 <p><em>With OCM_MCP_READ_ONLY=1 every write tool refuses before any guardrail or token logic runs - the coarse backstop.</em></p>
@@ -1239,7 +1239,7 @@ injected: failing-rollout into cluster1
   &quot;unhealthy_pods&quot;: [
     {
       &quot;namespace&quot;: &quot;shop&quot;,
-      &quot;name&quot;: &quot;payments-v2-6f6596d897-ss7kk&quot;,
+      &quot;name&quot;: &quot;payments-v2-6f6596d897-55p92&quot;,
       &quot;phase&quot;: &quot;Pending&quot;,
       &quot;waiting&quot;: [
         &quot;ImagePullBackOff&quot;
@@ -1248,10 +1248,10 @@ injected: failing-rollout into cluster1
     },
     {
       &quot;namespace&quot;: &quot;shop&quot;,
-      &quot;name&quot;: &quot;payments-v2-6f6596d897-vffx6&quot;,
+      &quot;name&quot;: &quot;payments-v2-6f6596d897-7xhbq&quot;,
       &quot;phase&quot;: &quot;Pending&quot;,
       &quot;waiting&quot;: [
-        &quot;ImagePullBackOff&quot;
+        &quot;ErrImagePull&quot;
       ],
       &quot;restarts&quot;: 0
     }
@@ -1272,9 +1272,25 @@ injected: failing-rollout into cluster1
 <pre><code>[
   {
     &quot;namespace&quot;: &quot;shop&quot;,
+    &quot;type&quot;: &quot;Warning&quot;,
+    &quot;reason&quot;: &quot;Failed&quot;,
+    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-55p92&quot;,
+    &quot;count&quot;: 2,
+    &quot;message&quot;: &quot;Failed to pull image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: rpc error: code = NotFound desc = failed to pull and unpack image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: failed to resolve reference \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent: not found&quot;
+  },
+  {
+    &quot;namespace&quot;: &quot;shop&quot;,
+    &quot;type&quot;: &quot;Warning&quot;,
+    &quot;reason&quot;: &quot;Failed&quot;,
+    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-55p92&quot;,
+    &quot;count&quot;: 2,
+    &quot;message&quot;: &quot;Error: ErrImagePull&quot;
+  },
+  {
+    &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;BackOff&quot;,
-    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-ss7kk&quot;,
+    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-55p92&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Back-off pulling image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;&quot;
   },
@@ -1282,7 +1298,7 @@ injected: failing-rollout into cluster1
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Warning&quot;,
     &quot;reason&quot;: &quot;Failed&quot;,
-    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-ss7kk&quot;,
+    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-55p92&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Error: ImagePullBackOff&quot;
   },
@@ -1290,32 +1306,16 @@ injected: failing-rollout into cluster1
     &quot;namespace&quot;: &quot;shop&quot;,
     &quot;type&quot;: &quot;Normal&quot;,
     &quot;reason&quot;: &quot;BackOff&quot;,
-    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-vffx6&quot;,
+    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-7xhbq&quot;,
     &quot;count&quot;: 1,
     &quot;message&quot;: &quot;Back-off pulling image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;&quot;
-  },
-  {
-    &quot;namespace&quot;: &quot;shop&quot;,
-    &quot;type&quot;: &quot;Warning&quot;,
-    &quot;reason&quot;: &quot;Failed&quot;,
-    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-vffx6&quot;,
-    &quot;count&quot;: 1,
-    &quot;message&quot;: &quot;Error: ImagePullBackOff&quot;
-  },
-  {
-    &quot;namespace&quot;: &quot;shop&quot;,
-    &quot;type&quot;: &quot;Warning&quot;,
-    &quot;reason&quot;: &quot;Failed&quot;,
-    &quot;object&quot;: &quot;Pod/payments-v2-6f6596d897-ss7kk&quot;,
-    &quot;count&quot;: 1,
-    &quot;message&quot;: &quot;Failed to pull image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: rpc error: code = NotFound desc = failed to pull and unpack image \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: failed to resolve reference \&quot;registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent\&quot;: registry.k8s.io/e2e-test-images/agnhost:2.47-nonexistent: not found
-... (1 more lines)
+... (2 more lines)
 </code></pre>
 <h3 id="-fix-fix-propose--approve">🔧 <code>FIX</code> FIX: propose + approve <a class="header-anchor" href="#-fix-fix-propose--approve">#</a></h3>
 <p><em>The agent proposes the smallest safe fix (a pinned, known-good image). It clears the guardrails and a human approves it.</em></p>
 <pre><code>$ propose_manifestwork -&gt; ocm-mcp approve
 </code></pre>
-<pre><code>proposal_id=653b32c3dd11423cbc4c65438e6e0de7
+<pre><code>proposal_id=a7e3abac1aaa444dad357b5beab7c830
 guardrails=passed  kyverno_dry_run=passed  approved=yes
 </code></pre>
 <h3 id="-fix-fix-apply_manifestwork">🔧 <code>FIX</code> FIX: apply_manifestwork <a class="header-anchor" href="#-fix-fix-apply_manifestwork">#</a></h3>
