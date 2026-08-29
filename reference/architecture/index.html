@@ -143,7 +143,7 @@ ManifestWork → work agent on each managed cluster
 <tbody>
 <tr>
 <td><code>server.py</code></td>
-<td>FastMCP server; the only surface the agent sees</td>
+<td>MCPServer (MCP Python SDK 2.x); the only surface the agent sees</td>
 </tr>
 <tr>
 <td><code>ocm.py</code></td>
@@ -197,7 +197,7 @@ are to <code>src/ocm_mcp_server/</code>.</p>
     A -- &quot;MCP JSON-RPC 2.0&lt;br/&gt;over stdio&quot; --&gt; B
 
     subgraph SERVER[&quot;SERVER PROCESS - ocm-mcp-server&quot;]
-        B[&quot;FastMCP dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
+        B[&quot;MCPServer dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
         B --&gt; C[&quot;traced_tool wrapper&lt;br/&gt;tracing.py&lt;br/&gt;1. optional OTel span&lt;br/&gt;2. classify outcome&lt;br/&gt;3. hash-chained audit line&lt;br/&gt;4. metrics.record&quot;]
         C --&gt; D{&quot;toolset?&quot;}
         D -- &quot;reads: 29 tools,&lt;br/&gt;6 resources&quot; --&gt; E[&quot;_read wrapper&lt;br/&gt;server.py&lt;br/&gt;missing API -&gt; UNAVAILABLE&lt;br/&gt;ApiException -&gt; clear&lt;br/&gt;message, no stack trace&quot;]
@@ -251,7 +251,7 @@ are to <code>src/ocm_mcp_server/</code>.</p>
     A -- &quot;MCP JSON-RPC 2.0&lt;br/&gt;over stdio&quot; --&gt; B
 
     subgraph SERVER[&quot;SERVER PROCESS - ocm-mcp-server&quot;]
-        B[&quot;FastMCP dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
+        B[&quot;MCPServer dispatch&lt;br/&gt;server.py&lt;br/&gt;argument schema validation&lt;br/&gt;readOnlyHint and&lt;br/&gt;destructiveHint per tool&quot;]
         B --&gt; C[&quot;traced_tool wrapper&lt;br/&gt;tracing.py&lt;br/&gt;1. optional OTel span&lt;br/&gt;2. classify outcome&lt;br/&gt;3. hash-chained audit line&lt;br/&gt;4. metrics.record&quot;]
         C --&gt; D{&quot;toolset?&quot;}
         D -- &quot;reads: 29 tools,&lt;br/&gt;6 resources&quot; --&gt; E[&quot;_read wrapper&lt;br/&gt;server.py&lt;br/&gt;missing API -&gt; UNAVAILABLE&lt;br/&gt;ApiException -&gt; clear&lt;br/&gt;message, no stack trace&quot;]
@@ -303,7 +303,7 @@ are to <code>src/ocm_mcp_server/</code>.</p>
 <div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="sequenceDiagram
     autonumber
     participant AG as Agent (MCP client)
-    participant FM as FastMCP (server.py)
+    participant FM as MCPServer (server.py)
     participant TR as traced_tool (tracing.py)
     participant OC as ocm.py
     participant K8 as k8s.py
@@ -330,7 +330,7 @@ are to <code>src/ocm_mcp_server/</code>.</p>
 "></div><pre class="mermaid-src"><code>sequenceDiagram
     autonumber
     participant AG as Agent (MCP client)
-    participant FM as FastMCP (server.py)
+    participant FM as MCPServer (server.py)
     participant TR as traced_tool (tracing.py)
     participant OC as ocm.py
     participant K8 as k8s.py
