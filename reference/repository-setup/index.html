@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server</title>
-<meta name="description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
-<meta property="og:title" content="Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server">
-<meta property="og:description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
+<title>Repository setup: what is not in the code · ocm-mcp-server</title>
+<meta name="description" content="Most of this project is reproducible from the repository alone: clone it, install the dependencies, run make ci-local, and everything works. A handful of things are not, because th…">
+<meta property="og:title" content="Repository setup: what is not in the code · ocm-mcp-server">
+<meta property="og:description" content="Most of this project is reproducible from the repository alone: clone it, install the dependencies, run make ci-local, and everything works. A handful of things are not, because th…">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ocm-mcp-server">
-<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/policy-pack/">
+<meta property="og:url" content="https://ocm-mcp-server.github.io/reference/repository-setup/">
 <!-- PNG, not the SVG banner: LinkedIn, X, Slack and Facebook all reject SVG
      for og:image and render no preview at all. Exported at 2400x1260 -
      the 1.91:1 ratio they crop cleanly, at 2x so it stays sharp on HiDPI
@@ -20,10 +20,10 @@
 <meta property="og:image:height" content="1260">
 <meta property="og:image:alt" content="ocm-mcp-server — AgentOps for Kubernetes fleets, done safely">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Policy pack: reusable Kyverno guardrails for ManifestWork · ocm-mcp-server">
-<meta name="twitter:description" content="The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies) are layer 2 of this project&#x27;s four-layer model. They…">
+<meta name="twitter:title" content="Repository setup: what is not in the code · ocm-mcp-server">
+<meta name="twitter:description" content="Most of this project is reproducible from the repository alone: clone it, install the dependencies, run make ci-local, and everything works. A handful of things are not, because th…">
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
-<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/policy-pack/">
+<link rel="canonical" href="https://ocm-mcp-server.github.io/reference/repository-setup/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
 <link rel="stylesheet" href="/static/site.css?v=27d0321dab">
 <script>
@@ -108,111 +108,174 @@
   </button>
 
   <aside class="side" id="sidenav">
-    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/policy-pack/" aria-current="page">Policy pack</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/repository-setup/">Repository setup</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
+    <div class="side__group"><p class="side__title">Start here</p><ul class="side__list"><li><a href="/journey/why-this-exists/"><span class="side__n">01</span>Why this exists</a></li><li><a href="/journey/the-idea/"><span class="side__n">02</span>The idea</a></li><li><a href="/journey/how-it-works/"><span class="side__n">03</span>How it works</a></li><li><a href="/journey/implementation/"><span class="side__n">04</span>Implementation</a></li><li><a href="/journey/tools-and-prompts/"><span class="side__n">05</span>Tools and prompts</a></li><li><a href="/journey/guardrails-deep-dive/"><span class="side__n">06</span>Guardrails deep dive</a></li><li><a href="/journey/getting-started/"><span class="side__n">07</span>Getting started</a></li><li><a href="/journey/use-cases-and-impact/"><span class="side__n">08</span>Use cases and impact</a></li><li><a href="/journey/evaluation/"><span class="side__n">09</span>Evaluation</a></li><li><a href="/journey/roadmap/"><span class="side__n">10</span>What&#x27;s next</a></li><li><a href="/journey/contributing/"><span class="side__n">11</span>Contributing</a></li><li><a href="/journey/faq/"><span class="side__n">12</span>FAQ</a></li></ul></div><div class="side__group"><p class="side__title">Run it</p><ul class="side__list"><li><a href="/reference/architecture/">Architecture</a></li><li><a href="/reference/guardrails/">Guardrails</a></li><li><a href="/reference/policy-pack/">Policy pack</a></li><li><a href="/reference/deployment/">Deployment</a></li><li><a href="/reference/repository-setup/" aria-current="page">Repository setup</a></li><li><a href="/reference/tools/">Tools and prompts</a></li><li><a href="/reference/examples/">Worked examples</a></li><li><a href="/reference/kubeconfig-contexts/">Kubeconfig contexts</a></li><li><a href="/reference/benchmarks/">Benchmarks</a></li><li><a href="/reference/security-self-assessment/">Security self-assessment</a></li><li><a href="/reference/cncf-sandbox-readiness/">CNCF readiness</a></li><li><a href="/reference/demo-script/">Demo script</a></li><li><a href="/reference/upstream-notes/">Upstream notes</a></li></ul></div><div class="side__group"><p class="side__title">Proof</p><ul class="side__list"><li><a href="/results/test-results/">End-to-end fleet run</a></li><li><a href="/results/unit-test-results/">Unit tests and coverage</a></li></ul></div>
   </aside>
 
   <article class="prose">
-    <h1>Policy pack: reusable Kyverno guardrails for ManifestWork</h1>
+    <h1>Repository setup: what is not in the code</h1>
 
-<p>The nine <code>ClusterPolicy</code> objects in
-<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/policies"><code>deploy/policies/</code></a>
-are layer 2 of this project's four-layer model. They are also a standalone pack: if you
-run Open Cluster Management and let anything automated propose <code>ManifestWork</code> objects —
-an agent, a controller, a CI job — they apply to you whether or not you run this server.</p>
-<pre><code class="language-bash">kubectl apply -f deploy/policies/     # install
-kyverno test deploy/policies/tests    # 42 offline cases, no cluster needed
-</code></pre>
-<p>The pack's own entry point, with the full per-policy table and adoption instructions, is
-<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/deploy/policies/README.md"><code>deploy/policies/README.md</code></a>.</p>
-<h2 id="the-problem-these-solve">The problem these solve <a class="header-anchor" href="#the-problem-these-solve">#</a></h2>
-<p>A <code>ManifestWork</code> is an envelope. What is dangerous is not the <code>ManifestWork</code> but the
-Deployment, Service, or Pod spec <strong>embedded inside</strong> <code>spec.workload.manifests</code>.</p>
-<p>Ordinary pod-security policies never see that content. They match <code>Pod</code> and <code>Deployment</code>
-at admission on the cluster where those objects are created — and on the hub, no such
-object is ever created, only an envelope containing them. A privileged container can
-travel across a fleet as a perfectly ordinary-looking custom resource, and every
-Pod-shaped admission control on the hub will wave it through.</p>
-<p>These policies iterate <code>spec.workload.manifests</code> with <code>foreach</code> and validate each
-embedded manifest on its own. No policy in the upstream Kyverno catalog demonstrates
-validating workloads nested inside another CR, which is why this set was offered
-upstream as a <code>Multi-Cluster Guardrails</code> example — see
-<a href="/reference/upstream-notes/">upstream notes</a>.</p>
-<h2 id="two-identifiers-and-why-both-matter">Two identifiers, and why both matter <a class="header-anchor" href="#two-identifiers-and-why-both-matter">#</a></h2>
-<p>Adopting the pack elsewhere means changing exactly two things: the
-<code>app.kubernetes.io/managed-by</code> label the content policies key on (11 occurrences across
-8 policies), and the ServiceAccount named in <code>require-managed-by-label.yaml</code>.</p>
-<p>Changing one without the other yields a pack that looks installed and enforces nothing.
-The eight content policies match on a <strong>label</strong>, which the request itself controls — so
-alone, a proposer could simply omit the label and skip every check.
-<code>require-managed-by-label</code> closes that by matching on the <strong>authenticated identity</strong>,
-which a request cannot forge, and requiring the label to be present. The label is only
-trustworthy because a second policy makes it mandatory for that identity.</p>
-<h2 id="which-kyverno-versions-were-actually-tested">Which Kyverno versions were actually tested <a class="header-anchor" href="#which-kyverno-versions-were-actually-tested">#</a></h2>
-<p>Every policy carries <code>policies.kyverno.io/minversion: 1.15.0</code>. That floor was measured
-by running the pack against real Kyverno CLI binaries, not inferred from release notes.</p>
+<p>Most of this project is reproducible from the repository alone: clone it, install the
+dependencies, run <code>make ci-local</code>, and everything works. A handful of things are not,
+because they live in GitHub settings or in external services rather than in a file.</p>
+<p>They are written down here because they are otherwise invisible — a fork, a transfer to
+a new owner, or a second maintainer would each discover them one broken workflow at a
+time. That is exactly what happened to this project once already: transferring the
+repository from a personal account to an organization silently broke releases, because
+the PyPI publisher, the registry namespace and the container path are all keyed to the
+owner and none of them follow a transfer.</p>
+<p>Everything below is settings, not secrets. The one secret is named, not printed.</p>
+<h2 id="organization">Organization <a class="header-anchor" href="#organization">#</a></h2>
 <div class="table-wrap"><table><thead>
 <tr>
-<th>Version</th>
-<th>Result</th>
+<th>Setting</th>
+<th>Value</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1.12.0</td>
-<td>Verdicts identical to current</td>
-</tr>
-<tr>
-<td><strong>1.13.0, 1.13.6</strong></td>
-<td><strong>Under-enforces pod security</strong></td>
-</tr>
-<tr>
-<td>1.14.0</td>
-<td>Cannot evaluate a custom resource offline without its CRD</td>
-</tr>
-<tr>
-<td>1.15.0, 1.16.0, 1.17.0</td>
-<td>Verdicts identical to current</td>
-</tr>
-<tr>
-<td>1.18.2, 1.19.0</td>
-<td><code>kyverno test</code> 42/42</td>
+<td><code>deploy_keys_enabled_for_repositories</code></td>
+<td><code>true</code></td>
+<td>Without it, adding the site publishing key fails with <em>&quot;Deploy keys are disabled for this repository&quot;</em>. It is an <strong>organization</strong> setting, not a repository one, which makes it easy to misdiagnose.</td>
 </tr>
 </tbody>
-</table></div><p>The floor is deliberately <strong>not</strong> the oldest version that works. 1.12.0 behaves
-correctly, but the whole 1.13 line silently under-enforces
-<code>restrict-manifestwork-pod-security</code>: a container declaring both <code>runAsNonRoot: true</code>
-and <code>runAsUser: 0</code> — a contradiction that has to be rejected — is admitted, so 7 of 8
-violating fixtures are caught instead of 8. Naming 1.12.0 as the floor would place a
-release that <em>quietly weakens a security control</em> inside the supported range. 1.15.0 is
-the oldest floor above which every release is verified good.</p>
-<p>If you are pinned to 1.13.x, treat that policy as advisory and rely on the
-proposer-side check in
-<a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/src/ocm_mcp_server/guardrails.py"><code>guardrails.py</code></a>
-as primary. This is exactly the case the two-layer design exists for: the Python checks
-and the Kyverno checks are independent, and a gap in one is covered by the other.</p>
-<h2 id="why-the-pack-ships-with-tests">Why the pack ships with tests <a class="header-anchor" href="#why-the-pack-ships-with-tests">#</a></h2>
-<p><code>kyverno test deploy/policies/tests</code> runs 42 cases over 25 <code>ManifestWork</code> fixtures with
-no cluster. Several assert a <strong>pass</strong> on purpose: <code>bad-gvk-spoof</code> is required to pass
-the kind-only allow-list and fail the exact-GVK one, which is the whole argument for
-shipping both policies rather than one.</p>
-<p>Beyond that, <code>hack/parity_contract.py</code> enforces in CI that every labelled fixture
-reaches the same verdict from the Kyverno policies and from the Python guardrails — so
-the two enforcement layers cannot silently drift apart. Adding a policy means adding
-fixtures, or the contract fails.</p>
-<p>See also: <a href="/reference/guardrails/">Guardrails</a> for the four-layer model,
-<a href="/reference/deployment/">Deployment</a> for installing them on a hub.</p>
+</table></div><h2 id="this-repository">This repository <a class="header-anchor" href="#this-repository">#</a></h2>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Branch protection on <code>main</code></td>
+<td>8 required checks, strict, 1 approving review</td>
+<td><code>test</code> on 3.11–3.14, <code>policy-test</code>, <code>secret-scan</code>, <code>dependency-review</code>, <code>dco</code>. Strict means a branch must be current before merging.</td>
+</tr>
+<tr>
+<td>Ruleset <code>MainBranch-Protection</code></td>
+<td><code>deletion</code>, <code>non_fast_forward</code> on the default branch</td>
+<td>Branch protection alone does <strong>not</strong> prevent a force-push; the API silently ignores <code>allow_force_pushes: false</code>. The ruleset is the only lever that works.</td>
+</tr>
+<tr>
+<td>Ruleset <code>ReleaseTag-Immutability</code></td>
+<td><code>deletion</code>, <code>non_fast_forward</code> on <code>refs/tags/v*</code></td>
+<td>Published versions are immutable. A failed release rolls forward to the next patch version rather than re-cutting a tag.</td>
+</tr>
+<tr>
+<td>Secret <code>SITE_PUBLISH_SSH_KEY</code></td>
+<td>private half of the site deploy key</td>
+<td>Lets <code>publish-root-site.yaml</code> write the built site to the root site repository.</td>
+</tr>
+<tr>
+<td>Pages</td>
+<td>source: GitHub Actions</td>
+<td>Serves the redirect built by <code>pages.yaml</code>, not a second copy of the site.</td>
+</tr>
+</tbody>
+</table></div><h2 id="the-root-site-repository">The root site repository <a class="header-anchor" href="#the-root-site-repository">#</a></h2>
+<p><code>ocm-mcp-server.github.io</code> exists for one reason: GitHub serves an organization's root
+Pages site <strong>only</strong> from a repository with exactly that name. No workflow in this
+repository can publish to <code>https://ocm-mcp-server.github.io/</code> directly, which is why the
+site is built here and pushed there.</p>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deploy key <code>publish-root-site (CI)</code></td>
+<td>write access; public half of <code>SITE_PUBLISH_SSH_KEY</code></td>
+</tr>
+<tr>
+<td>Pages</td>
+<td>deploy from branch <code>main</code>, path <code>/</code></td>
+</tr>
+</tbody>
+</table></div><p>A deploy key is used rather than a personal access token deliberately: it is bound to
+that one repository by construction rather than by policy, it cannot reach anything else
+in the account, and it does not expire, so it cannot lapse unnoticed between releases.</p>
+<h2 id="external-services-all-keyed-to-the-repository-owner">External services, all keyed to the repository owner <a class="header-anchor" href="#external-services-all-keyed-to-the-repository-owner">#</a></h2>
+<p>These three do <strong>not</strong> follow a repository transfer, and <code>hack/release.sh</code> refuses to cut
+a release until a human confirms them.</p>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Service</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PyPI</td>
+<td>Trusted publisher for project <code>ocm-mcp-server</code>, pointing at this repository, environment <code>pypi</code>. No API token is stored anywhere.</td>
+</tr>
+<tr>
+<td>MCP Registry</td>
+<td>Namespace <code>io.github.ocm-mcp-server</code>, matching the <code>mcp-name</code> comment at the top of README.md and the name in <code>server.json</code>.</td>
+</tr>
+<tr>
+<td>GHCR</td>
+<td>Package <code>ocm-mcp-server</code> under the organization, <strong>public</strong>. The registry publish step refuses an image that is not anonymously pullable.</td>
+</tr>
+</tbody>
+</table></div><h2 id="local-development">Local development <a class="header-anchor" href="#local-development">#</a></h2>
+<p>The versions below are what CI uses; anything close works.</p>
+<div class="table-wrap"><table><thead>
+<tr>
+<th>Tool</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python 3.11+</td>
+<td>3.11 through 3.14 are all tested</td>
+</tr>
+<tr>
+<td>podman</td>
+<td><strong>not</strong> Docker — the scripts prefer podman and start its VM if stopped. Docker is the fallback, which is what CI runners use</td>
+</tr>
+<tr>
+<td>kind, kubectl, clusteradm, helm</td>
+<td>only for the end-to-end fleet</td>
+</tr>
+<tr>
+<td>kyverno CLI</td>
+<td>1.15+ for the policy tests; see <a href="/reference/policy-pack/">policy pack</a> for why that floor</td>
+</tr>
+</tbody>
+</table></div><p>Two local-only files are untracked on purpose and are not in the repository:
+<code>hack/githooks/commit-msg</code>, which enforces the commit identity rules, and
+<code>.local-context/</code>, which holds working notes. Neither is required to build or test.</p>
+<h2 id="reproducing-this-setup-elsewhere">Reproducing this setup elsewhere <a class="header-anchor" href="#reproducing-this-setup-elsewhere">#</a></h2>
+<p>If you fork this repository, the code works immediately and CI mostly works. What will
+not work until you configure it:</p>
+<ol>
+<li><strong>Releases</strong> — you need your own PyPI trusted publisher, registry namespace and
+container path. <code>hack/release.sh</code> will stop and tell you.</li>
+<li><strong>Site publishing</strong> — create a deploy key on your own site repository and store its
+private half as <code>SITE_PUBLISH_SSH_KEY</code>, or delete <code>publish-root-site.yaml</code>.</li>
+<li><strong>Rulesets and branch protection</strong> — none of this is in the repository; recreate it
+from the tables above, or accept weaker guarantees.</li>
+</ol>
+<p>Nothing else is hidden. Every dependency is pinned by hash, every action by SHA, and
+every quoted number in the documentation is checked against the source by
+<code>hack/docs_stats.py</code> in CI.</p>
 
 
-    <nav class="pager"><a class="prev" href="/reference/guardrails/"><span class="pager__dir">Previous</span><span class="pager__t">Guardrails</span></a><a class="next" href="/reference/deployment/"><span class="pager__dir">Next</span><span class="pager__t">Deployment</span></a></nav>
+    <nav class="pager"><a class="prev" href="/reference/deployment/"><span class="pager__dir">Previous</span><span class="pager__t">Deployment</span></a><a class="next" href="/reference/tools/"><span class="pager__dir">Next</span><span class="pager__t">Tools and prompts</span></a></nav>
 
     <p class="editlink">
-      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/policy-pack.md">docs/policy-pack.md</a>
+      Source: <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/docs/repository-setup.md">docs/repository-setup.md</a>
       — this page is generated from it, so edit the markdown, not the site.
     </p>
   </article>
 
   <nav class="toc" aria-label="On this page">
-    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#the-problem-these-solve">The problem these solve</a></li><li class="lvl-2"><a href="#two-identifiers-and-why-both-matter">Two identifiers, and why both matter</a></li><li class="lvl-2"><a href="#which-kyverno-versions-were-actually-tested">Which Kyverno versions were actually tested</a></li><li class="lvl-2"><a href="#why-the-pack-ships-with-tests">Why the pack ships with tests</a></li></ul>
+    <p class="toc__title">On this page</p><ul><li class="lvl-2"><a href="#organization">Organization</a></li><li class="lvl-2"><a href="#this-repository">This repository</a></li><li class="lvl-2"><a href="#the-root-site-repository">The root site repository</a></li><li class="lvl-2"><a href="#external-services-all-keyed-to-the-repository-owner">External services, all keyed to the repository owner</a></li><li class="lvl-2"><a href="#local-development">Local development</a></li><li class="lvl-2"><a href="#reproducing-this-setup-elsewhere">Reproducing this setup elsewhere</a></li></ul>
   </nav>
 </main>
 
