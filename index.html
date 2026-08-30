@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=3a88e9233d">
+<link rel="stylesheet" href="/static/site.css?v=e2e1c4deef">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -193,17 +193,20 @@
        refused, the pinned proposal is human-signed, applied and verified.</p>
   </div>
   <figure>
+    <!-- One recording here, and its job is the story: refused, signed, applied.
+         The per-agent comparison lives in the results section at the foot of the
+         page, where each agent's recording sits beside its own numbers. Showing
+         all three in both places would play the same ten chapters twice. -->
     <video controls preload="none" playsinline width="100%"
            poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-connect.svg">
       <source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.mp4" type="video/mp4">
       <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif">Watch the recording</a>
     </video>
     <figcaption>Every answer is the model's own, over the real MCP protocol. The same ten
-      chapters are recorded against
-      <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif">Codex</a>
-      and
-      <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.gif">Gemini</a>
-      as well - same server, same fleet, only the agent changes.</figcaption>
+      chapters run against <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif">Claude</a>,
+      <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif">Codex</a> and
+      <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.gif">Gemini</a>: same server, same fleet, only the agent
+      changes.</figcaption>
   </figure>
 </section>
 
@@ -256,6 +259,8 @@
   </div>
   <div class="cards"><a class="card" data-reveal style="--d:0ms" href="/reference/architecture/"><span class="card__k">REF</span><h3>Architecture</h3><p>Fleet operations already flow through a hub: Open Cluster Management gives us cluster inventory (ManagedCluster), schedu</p></a><a class="card" data-reveal style="--d:55ms" href="/reference/guardrails/"><span class="card__k">REF</span><h3>Guardrails</h3><p>Static checks (guardrails.py) - fast, local, no cluster needed. Inputs are schema-checked first (a malformed manifest is</p></a><a class="card" data-reveal style="--d:110ms" href="/reference/policy-pack/"><span class="card__k">REF</span><h3>Policy pack</h3><p>The nine ClusterPolicy objects in deploy/policies/(https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/deploy/pol</p></a><a class="card" data-reveal style="--d:165ms" href="/reference/deployment/"><span class="card__k">REF</span><h3>Deployment</h3><p>Running the server is documented below. The settings that make this repository&#x27;s CI and releases work - rulesets, deploy</p></a><a class="card" data-reveal style="--d:220ms" href="/reference/repository-setup/"><span class="card__k">REF</span><h3>Repository setup</h3><p>Most of this project is reproducible from the repository alone: clone it, install the dependencies, run make ci-local, a</p></a><a class="card" data-reveal style="--d:275ms" href="/reference/tools/"><span class="card__k">REF</span><h3>Tools and prompts</h3><p>The server exposes 37 tools across ten toolsets plus ten prompts. This page is the canonical reference: every tool, its </p></a></div>
 </section>
+
+<section class="shell sec evalproof" id="evaluation"><div class="sec__head" data-reveal><h2>Two agents. One server. The failures too.</h2><p>The same 22 scripted incidents, the same fleet, the same build (v0.6.0, 37 tools). Only the agent changes. Each row links to the run that produced its numbers.</p></div><ol class="evalrows"><li class="evalrow" data-reveal style="--d: 0ms"><div class="evalcard"><header class="evalcard__head"><h3>Codex CLI</h3><code>gpt-5.6-sol</code><span class="evalcard__time">76 min</span></header><dl class="evalcard__metrics"><div class="evalmetric evalmetric--safety" style="--pct: 1.0000"><dt>Safety</dt><dd><b>19</b><span>/19</span></dd><div class="evalbar"><i></i></div></div><div class="evalmetric" style="--pct: 0.9091"><dt>Diagnosis</dt><dd><b>20</b><span>/22</span></dd><div class="evalbar"><i></i></div></div><div class="evalmetric" style="--pct: 0.5333"><dt>Recovery</dt><dd><b>8</b><span>/15</span></dd><div class="evalbar"><i></i></div></div></dl><footer class="evalcard__foot"><span class="evalcard__nm">3 not measured</span><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-codex-gpt-5.6-sol.json">raw JSON</a></footer></div><figure class="evalvid"><video controls preload="none" playsinline poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-connect.svg" aria-label="Codex CLI running the same ten chapters"><source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.mp4" type="video/mp4"><a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif">Watch the Codex CLI recording</a></video></figure></li><li class="evalrow" data-reveal style="--d: 80ms"><div class="evalcard"><header class="evalcard__head"><h3>Claude Code</h3><code>sonnet</code><span class="evalcard__time">104 min</span></header><dl class="evalcard__metrics"><div class="evalmetric evalmetric--safety" style="--pct: 1.0000"><dt>Safety</dt><dd><b>20</b><span>/20</span></dd><div class="evalbar"><i></i></div></div><div class="evalmetric" style="--pct: 0.6364"><dt>Diagnosis</dt><dd><b>14</b><span>/22</span></dd><div class="evalbar"><i></i></div></div><div class="evalmetric" style="--pct: 0.5333"><dt>Recovery</dt><dd><b>8</b><span>/15</span></dd><div class="evalbar"><i></i></div></div></dl><footer class="evalcard__foot"><span class="evalcard__nm">2 not measured</span><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-claude-sonnet.json">raw JSON</a></footer></div><figure class="evalvid"><video controls preload="none" playsinline poster="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/poster-connect.svg" aria-label="Claude Code running the same ten chapters"><source src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.mp4" type="video/mp4"><a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-claude.gif">Watch the Claude Code recording</a></video></figure></li></ol><p class="evalnote" data-reveal><b>Not measured</b> is neither a pass nor a failure: the agent made no tool call, so the guardrails were never consulted. <a href="/journey/evaluation/">How the harness scores</a></p></section>
 </main>
 
 
@@ -271,6 +276,6 @@
   </div>
 </footer>
 
-<script src="/static/site.js?v=64fc828ce5" defer></script>
+<script src="/static/site.js?v=dcbdb6855a" defer></script>
 </body>
 </html>
