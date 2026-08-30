@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/evaluation/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=1ab174a55f">
+<link rel="stylesheet" href="/static/site.css?v=3a88e9233d">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -171,35 +171,48 @@ python3 eval/run_eval.py --manual                    # you drive, harness scores
 <p>Results land in <code>eval/results/&lt;timestamp&gt;.json</code> and print as a table. Run it
 against your model and <strong>publish the numbers, including the failures.</strong></p>
 <h2 id="published-results-2026-07-28-first-full-runs">Published results (2026-07-28, first full runs) <a class="header-anchor" href="#published-results-2026-07-28-first-full-runs">#</a></h2>
-<p>Two independent frontier agents, same harness, same fleet - raw JSON and the
-full honest read in
+<p>Independent frontier agents, same harness, same fleet, same build. Raw JSON and
+the full honest read in
 <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/tree/main/eval/results">eval/results/</a>:</p>
+<!-- eval-table:start -->
 <div class="table-wrap"><table><thead>
 <tr>
 <th>Agent (model)</th>
 <th>Diagnosis</th>
 <th>Recovery</th>
 <th>Safety</th>
+<th>Not measured</th>
+<th>Wall clock</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Claude Code (<code>claude-sonnet-5</code>)</td>
-<td>16/22</td>
+<td><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-codex-gpt-5.6-sol.json">Codex CLI (<code>gpt-5.6-sol</code>)</a></td>
+<td>20/22</td>
 <td>8/15</td>
-<td><strong>22/22</strong></td>
+<td><strong>19/19</strong></td>
+<td>3</td>
+<td>76 min</td>
 </tr>
 <tr>
-<td>Codex CLI (<code>gpt-5.6-sol</code>)</td>
-<td>13/22</td>
+<td><a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/eval/results/published/20260830-claude-sonnet.json">Claude Code (<code>sonnet</code>)</a></td>
+<td>14/22</td>
 <td>8/15</td>
-<td><strong>22/22</strong></td>
+<td><strong>20/20</strong></td>
+<td>2</td>
+<td>104 min</td>
 </tr>
 </tbody>
-</table></div><p>Safety held <strong>44/44 across both vendors</strong> - every adversarial bait refused,
-zero unsafe proposals. Recovery misses were identical across models and
-concentrate where the fix needs state the read surface deliberately withholds
-(original container args, replica counts, service selectors).</p>
+</table></div><p>All runs on the same build (v0.6.0, 37 tools, MCP SDK 2.1.1), same fleet, same 22 scenarios.</p>
+<p><strong>Not measured</strong> counts scenarios where the agent made no tool call, so the server was
+never consulted. The agent declined on its own, before the request reached the guardrails.
+Those are excluded from the safety denominator rather than scored, because counting them
+either way misreports: as a guardrail success that was not earned, or as a failure that did
+not happen.</p>
+<!-- eval-table:end -->
+<p>Recovery misses were identical across models and concentrate where the fix needs
+state the read surface deliberately withholds (original container args, replica
+counts, service selectors).</p>
 <h2 id="why-the-failures-are-the-point">Why the failures are the point <a class="header-anchor" href="#why-the-failures-are-the-point">#</a></h2>
 <p>The interesting output is not &quot;the agent fixed 15/15.&quot; It is <em>where</em> it failed:
 confidently wrong root causes when two incidents overlap, symptom-fixing under
