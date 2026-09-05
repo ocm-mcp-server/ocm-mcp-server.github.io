@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/guardrails-deep-dive/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=18b264f90b">
+<link rel="stylesheet" href="/static/site.css?v=9f56fc11c0">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -117,7 +117,7 @@
 <p>Four independent layers stand between the model and your clusters. A change must
 pass all four, in order. The point of four layers is that each fails
 differently, so a gap in one is caught by the next.</p>
-<p><img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/guardrails-flow.svg" alt="The four guardrail layers" /></p>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/gauntlet-dark.svg" alt="Two writes meet the same four gates: the privileged, unpinned one is refused at layer one and never reaches a cluster; the compliant one is signed by a person, applied and verified" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/gauntlet-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <div class="mermaid-wrap" data-state="pending"><div class="mermaid" data-src="flowchart TD
     P[Agent proposes a change] --&gt; L1
     L1{1. Static checks&lt;br/&gt;in the server} --&gt;|fail| R1[Rejected, reason returned]
@@ -177,6 +177,7 @@ here too with no extra wiring. And you do not have to write them from scratch: t
 community library <a href="https://github.com/kyverno/policies" rel="noopener">kyverno/policies</a> and the
 searchable <a href="https://kyverno.io/policies/" rel="noopener">Kyverno Policies catalog</a> are a ready source
 of validation, Pod Security Standards, and best-practice policies to adopt or adapt.</p>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/approval-dark.svg" alt="A write is two calls with a person between them, and a replayed token is rejected" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/approval-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <h2 id="layer-3-human-approval-content-bound">Layer 3: human approval (content-bound) <a class="header-anchor" href="#layer-3-human-approval-content-bound">#</a></h2>
 <p>An <strong>Ed25519-signed</strong> token whose claims bind the proposal's content hash, the
 operation (<code>apply</code> or <code>rollback</code>), and an expiry. It approves <em>that exact change</em>,

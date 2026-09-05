@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/implementation/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=18b264f90b">
+<link rel="stylesheet" href="/static/site.css?v=9f56fc11c0">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -294,6 +294,7 @@ or 10-manifest limits.</li>
 </ul>
 <p>All violations across all manifests are reported at once, so the agent can fix
 everything in one revision. The Kyverno layer enforces the same baseline on the hub.</p>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/audit-dark.svg" alt="A hash-chained audit line per call, where editing an earlier line breaks the chain, beside the optional spans that show where the time went" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/audit-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <h2 id="observability">Observability <a class="header-anchor" href="#observability">#</a></h2>
 <p>Every tool call produces two independent records:</p>
 <ul>

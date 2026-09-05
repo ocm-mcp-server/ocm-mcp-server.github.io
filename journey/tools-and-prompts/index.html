@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/tools-and-prompts/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=18b264f90b">
+<link rel="stylesheet" href="/static/site.css?v=9f56fc11c0">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -117,7 +117,7 @@
 <p><strong>37 tools across ten toolsets, plus ten prompts.</strong> Almost all of it is read: the
 whole Open Cluster Management API is safe to inspect. Only two toolsets can change
 anything, and only through the propose -&gt; approve -&gt; apply gate.</p>
-<p><img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/read-write-paths.svg" alt="Reads are free; writes are gated" /></p>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/paths-dark.svg" alt="Reads answer immediately and freely; writes go through propose, a human approval, and a one-time-token apply" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/paths-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <p>Every hub-level tool works for any managed spoke - a standalone OpenShift cluster, a
 HyperShift hosted cluster, or a cloud cluster - because on the hub they are all
 <code>ManagedCluster</code>s. Run <code>ocm-mcp doctor</code> to call every read tool against your hub and
@@ -193,7 +193,8 @@ print a <code>PASS / EMPTY / SKIP / FAIL</code> table before wiring up an agent.
 <td>-</td>
 </tr>
 </tbody>
-</table></div><h2 id="tool-classes">Tool classes <a class="header-anchor" href="#tool-classes">#</a></h2>
+</table></div><p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/toolsets-dark.svg" alt="The whole tool surface across ten toolsets, with only work and registration able to change anything" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/toolsets-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
+<h2 id="tool-classes">Tool classes <a class="header-anchor" href="#tool-classes">#</a></h2>
 <ul>
 <li><strong>read</strong> - safe, non-mutating, no gate. Annotated <code>readOnlyHint</code>.</li>
 <li><strong>propose</strong> - stores a pending change; mutates nothing on any cluster. Runs static
