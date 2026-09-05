@@ -25,7 +25,7 @@
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/journey/how-it-works/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=18b264f90b">
+<link rel="stylesheet" href="/static/site.css?v=9f56fc11c0">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -136,7 +136,7 @@
 static guardrails, writes an audit line and a trace span for every call, and
 talks to the hub. The hub enforces Kyverno policy and RBAC. A human, on a
 separate trusted terminal, is the only source of approval tokens.</p>
-<p><img src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/read-write-paths.svg" alt="Reads are free; writes are gated" /></p>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/paths-dark.svg" alt="Reads answer immediately and freely; writes go through propose, a human approval, and a one-time-token apply" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/paths-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <h2 id="the-read-path-free">The read path (free) <a class="header-anchor" href="#the-read-path-free">#</a></h2>
 <p>Investigation has no gate. The agent can call any read tool as often as it
 likes.</p>
@@ -239,6 +239,7 @@ one is covered by the others. Details in
   </video>
   <figcaption>A fleet operator's day, recorded live: the privileged <code>:latest</code> shortcut is <b>refused</b>, the pinned proposal is <b>signed by a human</b>, applied with the token, verified, and the day read back from the audit trail. The identical session is also recorded against <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-codex.gif">Codex</a> and <a href="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/demo/connect-agy.gif">Gemini</a> - same server, same fleet, only the agent changes.</figcaption>
 </figure>
+<p><span class="art"><img class="art--dark" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/approval-dark.svg" alt="A write is two calls with a person between them, and a replayed token is rejected" loading="lazy"><img class="art--light" src="https://raw.githubusercontent.com/ocm-mcp-server/ocm-mcp-server/main/docs/assets/art/approval-light.svg" alt="" aria-hidden="true" loading="lazy"></span></p>
 <h2 id="why-approval-is-a-token-not-a-chat-yes">Why approval is a token, not a chat &quot;yes&quot; <a class="header-anchor" href="#why-approval-is-a-token-not-a-chat-yes">#</a></h2>
 <p>A &quot;yes&quot; in chat approves a conversation. The token approves <em>content</em>. It is an
 <strong>Ed25519 signature</strong> over claims that bind the proposal's SHA-256 hash, the
