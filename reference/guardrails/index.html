@@ -149,7 +149,12 @@ property holds only when the private signing key is kept off the server - a
 separate OS account or device via <code>OCM_MCP_SIGNER_KEY</code>. Co-located under one
 <code>OCM_MCP_HOME</code>, signer isolation is a filesystem convention, not an enforced
 boundary; treat off-box signing (or a chat-ops/ticket signer) as required for
-that guarantee. An apply token cannot authorize a rollback; rollback needs its
+that guarantee. Set <strong><code>OCM_MCP_STRICT=1</code></strong> and the convention becomes a
+precondition: the server refuses to start while the private key is readable
+beside it, or while <code>OCM_MCP_ISSUER</code>/<code>OCM_MCP_AUDIENCE</code> are left at their
+defaults. Serving tools that look gated and are not is worse than not serving
+them, and the warning these replace went to a stderr stream that an MCP client
+usually swallows. An apply token cannot authorize a rollback; rollback needs its
 own proposal and token.</li>
 <li><strong>RBAC</strong> (<code>deploy/rbac.yaml</code>) - the server's own identity can read the OCM API
 and create/delete ManifestWorks and manage add-ons. RBAC cannot scope this to
