@@ -24,8 +24,13 @@
 <meta name="twitter:description" content="An MCP server that lets AI agents operate a multi-cluster Kubernetes fleet through an Open Cluster Management hub, with policy, approval and audit between the model and your clusters.">
 <meta name="twitter:image" content="https://ocm-mcp-server.github.io/static/og.png?v=c6ed33dfce">
 <link rel="canonical" href="https://ocm-mcp-server.github.io/">
+<!-- Let the image-rich results actually show the art: without this a crawler
+     may only ever render a thumbnail, and every panel here is the argument. -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Sandeep Bazar">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
-<link rel="stylesheet" href="/static/site.css?v=9f56fc11c0">
+<link rel="stylesheet" href="/static/site.css?v=d099c9beab">
 <script>
   // Dark is the default for everyone, regardless of OS preference — this is a
   // dark-first design and it is what the project should lead with. A visitor
@@ -54,6 +59,7 @@
     }, 2000);
   })();
 </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://ocm-mcp-server.github.io/#software","name":"ocm-mcp-server","applicationCategory":"DeveloperApplication","applicationSubCategory":"Model Context Protocol server","operatingSystem":"Linux, macOS","url":"https://ocm-mcp-server.github.io/","downloadUrl":"https://pypi.org/project/ocm-mcp-server/","codeRepository":"https://github.com/ocm-mcp-server/ocm-mcp-server","license":"https://www.apache.org/licenses/LICENSE-2.0","description":"An MCP server that lets AI agents operate a multi-cluster Kubernetes fleet through an Open Cluster Management hub, with policy, human approval and audit between the model and your clusters.","keywords":"MCP server, Model Context Protocol, Kubernetes, Open Cluster Management, OCM, multi-cluster, AgentOps, AI agent, Kyverno, guardrails, SRE, platform engineering","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Sandeep Bazar"}},{"@type":"SoftwareSourceCode","@id":"https://ocm-mcp-server.github.io/#source","name":"ocm-mcp-server","codeRepository":"https://github.com/ocm-mcp-server/ocm-mcp-server","programmingLanguage":"Python","runtimePlatform":"Python 3.11+","license":"https://www.apache.org/licenses/LICENSE-2.0","about":{"@id":"https://ocm-mcp-server.github.io/#software"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -117,6 +123,18 @@
     </a>
     <a class="btn btn--ghost" href="/reference/deployment/">Get started</a>
   </div>
+
+  <!-- The same star call to action the README carries, so the ask is in both places a
+       reader might land. The cursor presses and the star fills off one clock, which is
+       what makes it read as cause and effect rather than as two loops. -->
+  <p class="starcta" data-reveal style="--d:230ms">
+    <span class="starcta__txt">Star us&nbsp;❤️&nbsp;→</span>
+    <a class="starcta__btn" href="https://github.com/ocm-mcp-server/ocm-mcp-server"
+       target="_blank" rel="noopener" aria-label="Star ocm-mcp-server on GitHub">
+      <img class="art--dark" src="/assets/art/star-dark.svg" alt="" aria-hidden="true" width="132" height="34">
+      <img class="art--light" src="/assets/art/star-light.svg" alt="" aria-hidden="true" width="132" height="34">
+    </a>
+  </p>
 
   <div class="hero__art" data-reveal style="--d:260ms">
     <img class="hero__art-dark" src="/assets/art/hero-dark.svg" alt="An agent's tool calls pass through a guardrailed control plane where reads are free, consequential writes need a human signature, and everything is recorded." width="880" loading="eager">
