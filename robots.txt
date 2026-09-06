@@ -1,0 +1,5 @@
+# Everything here is public documentation; crawl all of it.
+User-agent: *
+Allow: /
+
+Sitemap: https://ocm-mcp-server.github.io/sitemap.xml
