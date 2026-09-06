@@ -191,6 +191,13 @@ not a conversation. Approval is asymmetric: the CLI holds the private signing ke
 and the server only the public key, so the server can verify a token but can never
 mint one. Minted only by the <code>ocm-mcp</code> CLI on a trusted terminal. See
 <a href="/journey/how-it-works/">How It Works</a> for the token mechanics.</p>
+<p>That &quot;can never mint&quot; holds only while the signing key is genuinely off the
+server. Co-located under one <code>OCM_MCP_HOME</code> it is a filesystem convention, so
+<code>OCM_MCP_STRICT=1</code> turns it into a precondition: the server refuses to start
+while the private key is readable beside it, or while the issuer and audience
+are left at their defaults. Both were already reported at startup, and both
+went to stderr - which an MCP client, launching the server over stdio, usually
+swallows into a log nobody opens.</p>
 <h2 id="layer-4-least-privilege-rbac">Layer 4: least-privilege RBAC <a class="header-anchor" href="#layer-4-least-privilege-rbac">#</a></h2>
 <p>The server's hub identity can read across the OCM API and create/delete
 ManifestWorks and add-ons. RBAC cannot scope this to &quot;only objects it created&quot;,
