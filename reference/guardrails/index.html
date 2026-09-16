@@ -126,11 +126,13 @@
 schema-checked first (a malformed manifest is a clean rejection, not a crash),
 then a Restricted-Pod-Security baseline is enforced on every embedded workload and
 its init/ephemeral containers: full <code>apiVersion/kind</code> allow-list (a spoofed group
-like <code>evil.example/v1, Deployment</code> is rejected), no host namespaces,
-<code>automountServiceAccountToken: false</code>, no arbitrary service account, an allow-list
-of volume types (no PVC/CSI/hostPath/secret) and Service types (no
+like <code>evil.example/v1, Deployment</code> is rejected), no host namespaces and no
+<code>hostPort</code>, <code>automountServiceAccountToken: false</code>, no arbitrary service account,
+an allow-list of volume types (no PVC/CSI/hostPath/secret) and of projected
+sources (only <code>configMap</code>/<code>downwardAPI</code>) and Service types (no
 NodePort/LoadBalancer/externalIPs), required <code>runAsNonRoot</code>,
-<code>allowPrivilegeEscalation: false</code>, no <code>runAsUser: 0</code>, all capabilities dropped, a
+<code>allowPrivilegeEscalation: false</code>, no <code>runAsUser: 0</code>, <code>procMount: Default</code> only,
+only the namespaced-safe sysctls, all capabilities dropped, a
 seccomp profile, no indirect Secret access (<code>env.secretKeyRef</code>, secret/projected-token
 volumes), pinned images (optionally a 64-hex <code>@sha256</code> digest via
 <code>OCM_MCP_REQUIRE_DIGEST</code>), and per-proposal limits (a byte ceiling, a 10-manifest cap,

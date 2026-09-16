@@ -288,10 +288,11 @@ crash), then each manifest is rejected on any of:</p>
 missing <code>runAsNonRoot</code>, <code>runAsUser: 0</code>, <code>allowPrivilegeEscalation</code> not <code>false</code>,
 not dropping <code>ALL</code> capabilities, added capabilities, <code>privileged</code>, or a missing
 seccomp profile;</li>
-<li><code>hostNetwork</code> / <code>hostPID</code> / <code>hostIPC</code>;</li>
+<li><code>hostNetwork</code> / <code>hostPID</code> / <code>hostIPC</code>, a <code>hostPort</code> binding a node's network, a
+<code>procMount</code> other than <code>Default</code>, or a sysctl outside the namespaced-safe set;</li>
 <li>a volume outside the allow-list (only <code>configMap</code>/<code>emptyDir</code>/<code>downwardAPI</code>/
-projected-without-secrets - so no Secret/hostPath/PVC/CSI/NFS), or an indirect
-Secret env ref;</li>
+<code>projected</code> - so no Secret/hostPath/PVC/CSI/NFS), a projected source outside
+<code>configMap</code>/<code>downwardAPI</code>, or an indirect Secret env ref;</li>
 <li>a Service that is not <code>ClusterIP</code>, or that sets <code>externalIPs</code>;</li>
 <li>an unpinned image (<code>:latest</code> or no tag; a 64-hex <code>@sha256</code> digest when
 <code>OCM_MCP_REQUIRE_DIGEST</code> is set);</li>

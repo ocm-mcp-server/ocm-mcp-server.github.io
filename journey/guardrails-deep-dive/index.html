@@ -161,8 +161,10 @@ differently, so a gap in one is caught by the next.</p>
 <p>Runs in the server before anything else, with no cluster round-trip, so the
 agent gets instant, specific feedback. Enforces a Restricted-Pod-Security
 baseline on every workload (no root/privilege-escalation, drop-ALL, seccomp, no
-host access, no arbitrary service account or Secret access), an exact GVK
-allow-list, protected/platform namespaces, a volume and Service-type allow-list,
+host access including <code>hostPort</code>, <code>procMount: Default</code> only, only the
+namespaced-safe sysctls, no arbitrary service account or Secret access), an exact
+GVK allow-list, protected/platform namespaces, a volume, projected-source and
+Service-type allow-list,
 image pinning, and per-proposal limits. See <a href="/journey/implementation/">Implementation</a> for
 the full list.</p>
 <h2 id="layer-2-kyverno-policy-admission">Layer 2: Kyverno policy admission <a class="header-anchor" href="#layer-2-kyverno-policy-admission">#</a></h2>
@@ -175,7 +177,7 @@ delivered, and the agent gets the policy message to self-correct.</p>
 <p>The policies are scoped by the label
 <code>app.kubernetes.io/managed-by: ocm-mcp-server</code>, so human platform engineers are
 not affected. They ship with an offline CLI test suite
-(<code>make policy-test</code>, 42 cases) that runs in CI.</p>
+(<code>make policy-test</code>, 46 cases) that runs in CI.</p>
 <p>Because it is just <a href="https://kyverno.io/docs/introduction/" rel="noopener">Kyverno</a> - a CNCF policy
 engine whose policies are ordinary Kubernetes resources in YAML and CEL, enforced by
 the cluster rather than by the prompt - your existing organizational policies apply

@@ -411,7 +411,7 @@ single-cluster tool once per member.</p>
     GR-&gt;&gt;GR: per-manifest schema check first (malformed = clean violation, never a crash)
     GR-&gt;&gt;GR: exact (apiVersion, kind) in ALLOWED_GVK - group spoofing blocked
     GR-&gt;&gt;GR: namespace required + protected list + kube-*/openshift-*/ocm prefixes
-    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false
+    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false,&lt;br/&gt;procMount=Default, no hostPort, safe sysctls only
     GR-&gt;&gt;GR: volume ALLOW-list (configMap/emptyDir/downwardAPI/projected),&lt;br/&gt;no projected serviceAccountToken/secret sources
     GR-&gt;&gt;GR: no env secretKeyRef / envFrom secretRef (no path to Secret contents)
     GR-&gt;&gt;GR: image pinned - no :latest, no tagless, @sha256 digest in strict mode
@@ -464,7 +464,7 @@ single-cluster tool once per member.</p>
     GR-&gt;&gt;GR: per-manifest schema check first (malformed = clean violation, never a crash)
     GR-&gt;&gt;GR: exact (apiVersion, kind) in ALLOWED_GVK - group spoofing blocked
     GR-&gt;&gt;GR: namespace required + protected list + kube-*/openshift-*/ocm prefixes
-    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false
+    GR-&gt;&gt;GR: Restricted PSS on every container role (regular/init/ephemeral):&lt;br/&gt;runAsNonRoot, no runAsUser 0, allowPrivilegeEscalation=false,&lt;br/&gt;drop ALL, no added caps, seccomp, automountServiceAccountToken=false,&lt;br/&gt;procMount=Default, no hostPort, safe sysctls only
     GR-&gt;&gt;GR: volume ALLOW-list (configMap/emptyDir/downwardAPI/projected),&lt;br/&gt;no projected serviceAccountToken/secret sources
     GR-&gt;&gt;GR: no env secretKeyRef / envFrom secretRef (no path to Secret contents)
     GR-&gt;&gt;GR: image pinned - no :latest, no tagless, @sha256 digest in strict mode

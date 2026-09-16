@@ -274,9 +274,12 @@ skip the content policies keyed on that label.</li>
 <ul>
 <li><strong>Restricted-Pod-Security guardrails.</strong> Static checks enforce a Restricted baseline on
 every embedded workload (and its init/ephemeral containers): exact <code>apiVersion/kind</code>
-allow-list (blocks group spoofing), no host namespaces, <code>automountServiceAccountToken: false</code>, no arbitrary service account, an allow-list of volume and Service types (no
-PVC/CSI/hostPath/secret, no NodePort/LoadBalancer/externalIPs), required
-<code>runAsNonRoot</code>, <code>allowPrivilegeEscalation: false</code>, all capabilities dropped, a seccomp
+allow-list (blocks group spoofing), no host namespaces and no <code>hostPort</code>,
+<code>automountServiceAccountToken: false</code>, no arbitrary service account, an allow-list of
+volume types, of projected sources (<code>configMap</code>/<code>downwardAPI</code> only) and of Service
+types (no PVC/CSI/hostPath/secret, no NodePort/LoadBalancer/externalIPs), required
+<code>runAsNonRoot</code>, <code>allowPrivilegeEscalation: false</code>, <code>procMount: Default</code> only, only the
+namespaced-safe sysctls, all capabilities dropped, a seccomp
 profile, no indirect Secret access, and pinned images (optionally digest-pinned via
 <code>OCM_MCP_REQUIRE_DIGEST</code>). Inputs are schema-checked first, so a malformed manifest is a
 clean rejection, not a crash. Checks run before policy admission and again at apply.</li>
