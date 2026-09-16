@@ -126,7 +126,7 @@ are layer 2 of this project's four-layer model. They are also a standalone pack:
 run Open Cluster Management and let anything automated propose <code>ManifestWork</code> objects —
 an agent, a controller, a CI job — they apply to you whether or not you run this server.</p>
 <pre><code class="language-bash">kubectl apply -f deploy/policies/     # install
-kyverno test deploy/policies/tests    # 42 offline cases, no cluster needed
+kyverno test deploy/policies/tests    # 46 offline cases, no cluster needed
 </code></pre>
 <p>The pack's own entry point, with the full per-policy table and adoption instructions, is
 <a href="https://github.com/ocm-mcp-server/ocm-mcp-server/blob/main/deploy/policies/README.md"><code>deploy/policies/README.md</code></a>.</p>
@@ -181,7 +181,7 @@ by running the pack against real Kyverno CLI binaries, not inferred from release
 </tr>
 <tr>
 <td>1.18.2, 1.19.0</td>
-<td><code>kyverno test</code> 42/42</td>
+<td><code>kyverno test</code> 46/46</td>
 </tr>
 </tbody>
 </table></div><p>The floor is deliberately <strong>not</strong> the oldest version that works. 1.12.0 behaves
@@ -197,7 +197,7 @@ proposer-side check in
 as primary. This is exactly the case the two-layer design exists for: the Python checks
 and the Kyverno checks are independent, and a gap in one is covered by the other.</p>
 <h2 id="why-the-pack-ships-with-tests">Why the pack ships with tests <a class="header-anchor" href="#why-the-pack-ships-with-tests">#</a></h2>
-<p><code>kyverno test deploy/policies/tests</code> runs 42 cases over 25 <code>ManifestWork</code> fixtures with
+<p><code>kyverno test deploy/policies/tests</code> runs 46 cases over 29 <code>ManifestWork</code> fixtures with
 no cluster. Several assert a <strong>pass</strong> on purpose: <code>bad-gvk-spoof</code> is required to pass
 the kind-only allow-list and fail the exact-GVK one, which is the whole argument for
 shipping both policies rather than one.</p>
